@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" version="29.6.1" pages="2">
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" version="29.6.1" pages="3">
   <diagram name="Context" id="yDwImh-FhdQ-O_s1nxjc">
-    <mxGraphModel dx="3178" dy="1697" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2600" pageHeight="1200" math="0" shadow="0">
+    <mxGraphModel dx="1645" dy="1216" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2600" pageHeight="1200" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -129,7 +129,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="pBO_DVbLiEVP89nKOPsq" name="Data Model">
-    <mxGraphModel dx="1355" dy="960" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1531" dy="1115" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -305,7 +305,7 @@
             <mxRectangle height="38" width="120" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="Rkr7kTN26XwxT07mvA-K-41" parent="Rkr7kTN26XwxT07mvA-K-39" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;whiteSpace=wrap;html=1;" value="Row 3" vertex="1">
+        <mxCell id="Rkr7kTN26XwxT07mvA-K-41" parent="Rkr7kTN26XwxT07mvA-K-39" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;whiteSpace=wrap;html=1;" value="" vertex="1">
           <mxGeometry height="38" width="200" x="120" as="geometry">
             <mxRectangle height="38" width="200" as="alternateBounds" />
           </mxGeometry>
@@ -1302,6 +1302,61 @@
             <mxPoint x="593" y="1415" as="sourcePoint" />
             <mxPoint x="1186" y="1808" as="targetPoint" />
           </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="mUHPFhTX47GG2x5Ckl2g" name="User Use Cases">
+    <mxGraphModel dx="1065" dy="1876" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="j24CJ2FqnpoO7oiRCTw2-15" edge="1" parent="1" source="j24CJ2FqnpoO7oiRCTw2-1" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="j24CJ2FqnpoO7oiRCTw2-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="j24CJ2FqnpoO7oiRCTw2-16" edge="1" parent="1" source="j24CJ2FqnpoO7oiRCTw2-1" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="j24CJ2FqnpoO7oiRCTw2-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="j24CJ2FqnpoO7oiRCTw2-17" edge="1" parent="1" source="j24CJ2FqnpoO7oiRCTw2-1" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="j24CJ2FqnpoO7oiRCTw2-11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="j24CJ2FqnpoO7oiRCTw2-18" edge="1" parent="1" source="j24CJ2FqnpoO7oiRCTw2-1" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="j24CJ2FqnpoO7oiRCTw2-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="j24CJ2FqnpoO7oiRCTw2-19" edge="1" parent="1" source="j24CJ2FqnpoO7oiRCTw2-1" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="j24CJ2FqnpoO7oiRCTw2-13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="j24CJ2FqnpoO7oiRCTw2-20" edge="1" parent="1" source="j24CJ2FqnpoO7oiRCTw2-1" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="j24CJ2FqnpoO7oiRCTw2-14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="j24CJ2FqnpoO7oiRCTw2-1" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" value="User" vertex="1">
+          <mxGeometry height="60" width="30" x="168" y="274" as="geometry" />
+        </mxCell>
+        <object placeholders="1" c4Name="Map use cases" c4Type="SystemScopeBoundary" c4Application="View" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;&lt;div style=&quot;text-align: left&quot;&gt;%c4Name%&lt;/div&gt;&lt;/b&gt;&lt;/font&gt;&lt;div style=&quot;text-align: left&quot;&gt;[%c4Application%]&lt;/div&gt;" id="j24CJ2FqnpoO7oiRCTw2-6">
+          <mxCell parent="1" style="rounded=1;fontSize=11;whiteSpace=wrap;html=1;dashed=1;arcSize=20;fillColor=none;strokeColor=#666666;fontColor=#333333;labelBackgroundColor=none;align=left;verticalAlign=bottom;labelBorderColor=none;spacingTop=0;spacing=10;dashPattern=8 4;metaEdit=1;rotatable=0;perimeter=rectanglePerimeter;noLabel=0;labelPadding=0;allowArrows=0;connectable=0;expand=0;recursiveResize=0;editable=1;pointerEvents=0;absoluteArcSize=1;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" vertex="1">
+            <mxGeometry height="595" width="827" x="74" y="-8" as="geometry" />
+          </mxCell>
+        </object>
+        <mxCell id="j24CJ2FqnpoO7oiRCTw2-7" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Map interaction:&lt;div&gt;resize and move map&lt;/div&gt;" vertex="1">
+          <mxGeometry height="70" width="140" x="319" y="24" as="geometry" />
+        </mxCell>
+        <mxCell id="j24CJ2FqnpoO7oiRCTw2-10" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Open place/event details&amp;nbsp; located on map" vertex="1">
+          <mxGeometry height="70" width="140" x="344" y="128" as="geometry" />
+        </mxCell>
+        <mxCell id="j24CJ2FqnpoO7oiRCTw2-11" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Filter places/events on map" vertex="1">
+          <mxGeometry height="70" width="140" x="344" y="221" as="geometry" />
+        </mxCell>
+        <mxCell id="j24CJ2FqnpoO7oiRCTw2-12" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Search places/events on map" vertex="1">
+          <mxGeometry height="70" width="140" x="374" y="315" as="geometry" />
+        </mxCell>
+        <mxCell id="j24CJ2FqnpoO7oiRCTw2-13" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Change view from map to list" vertex="1">
+          <mxGeometry height="70" width="156" x="362" y="408" as="geometry" />
+        </mxCell>
+        <mxCell id="j24CJ2FqnpoO7oiRCTw2-14" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Show current location of user" vertex="1">
+          <mxGeometry height="70" width="156" x="314" y="505" as="geometry" />
+        </mxCell>
+        <mxCell id="j24CJ2FqnpoO7oiRCTw2-21" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Add to favourite" vertex="1">
+          <mxGeometry height="70" width="140" x="605" y="44" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
