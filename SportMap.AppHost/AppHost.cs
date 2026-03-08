@@ -2,9 +2,16 @@ var builder = DistributedApplication.CreateBuilder(args);
 
 var cache = builder.AddRedis("cache");
 
+var postgres = builder.AddPostgres("postgres")
+                      .WithDataVolume(isReadOnly: false);
+
+var postgresdb = postgres.AddDatabase("sportmapdb");
+
 var server = builder.AddProject<Projects.SportMap_Server>("server")
                     .WithReference(cache)
                     .WaitFor(cache)
+                    .WithReference(postgres)
+                    .WaitFor(postgres)
                     .WithHttpHealthCheck("/health")
                     .WithExternalHttpEndpoints();
 

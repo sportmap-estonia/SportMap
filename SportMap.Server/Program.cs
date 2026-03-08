@@ -5,6 +5,8 @@ builder.AddServiceDefaults();
 builder.AddRedisClientBuilder("cache")
     .WithOutputCache();
 
+builder.AddNpgsqlDataSource(connectionName: "postgres");
+
 // Add services to the container.
 builder.Services.AddProblemDetails();
 
