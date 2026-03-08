@@ -8,11 +8,12 @@ var server = builder.AddProject<Projects.SportMap_Server>("server")
                     .WithHttpHealthCheck("/health")
                     .WithExternalHttpEndpoints();
 
-var pnpmApp = builder.AddPnpmApp("webfrontend")
+var pnpmApp = builder.AddJavaScriptApp("webfrontend", "../frontend")
+                     .WithHttpEndpoint(port: 3000, env: "PORT")
                      .WithReference(server)
                      .WaitFor(server)
-                     .WithExternalHttpEndpoints();
-    
+                     .WithExternalHttpEndpoints()
+                     .WithPnpm();
 //server.PublishWithContainerFiles(webfrontend, "wwwroot");
 
 builder.Build().Run();
