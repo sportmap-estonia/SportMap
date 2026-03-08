@@ -14,6 +14,5 @@ var pnpmApp = builder.AddJavaScriptApp("webfrontend", "../frontend")
                      .WaitFor(server)
                      .WithExternalHttpEndpoints()
                      .WithPnpm();
-//server.PublishWithContainerFiles(webfrontend, "wwwroot");
 
 builder.Build().Run();
