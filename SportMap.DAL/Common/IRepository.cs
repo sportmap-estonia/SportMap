@@ -5,7 +5,7 @@ namespace SportMap.DAL.Common
 {
     public interface IRepository<TData> where TData : BaseData
     {
-        Task<TData?> GetByIdAsync(int id, CancellationToken ct = default);
+        Task<TData?> GetByIdAsync(Guid id, CancellationToken ct = default);
         Task<IReadOnlyList<TData>> GetAllAsync(CancellationToken ct = default);
         Task<IReadOnlyList<TData>> FindAsync(Expression<Func<TData, bool>> predicate, CancellationToken ct = default);
         Task<TData> AddAsync(TData entity, CancellationToken ct = default);

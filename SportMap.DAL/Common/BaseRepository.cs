@@ -19,7 +19,7 @@ namespace SportMap.DAL.Common
             _dbSet = context.Set<TData>();
         }
 
-        public async Task<TData?> GetByIdAsync(int id, CancellationToken ct = default)
+        public async Task<TData?> GetByIdAsync(Guid id, CancellationToken ct = default)
         {
             try
             {
