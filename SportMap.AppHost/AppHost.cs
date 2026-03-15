@@ -10,7 +10,7 @@ var pgDb = builder.AddPostgres("postgres", pgUsername, pgPassword)
     .WithPgAdmin(pgAdmin => pgAdmin.WithHostPort(5050))
     .AddDatabase("sportmapdb");
 
-var server = builder.AddProject<Projects.SportMap_Server>("server")
+var server = builder.AddProject<Projects.SportMap_PL>("server")
     .WithReference(cache)
     .WaitFor(cache)
     .WithReference(pgDb)

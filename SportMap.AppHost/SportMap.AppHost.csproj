@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SportMap.Server\SportMap.Server.csproj" />
+    <ProjectReference Include="..\SportMap.Server\SportMap.PL.csproj" />
   </ItemGroup>
 
   <ItemGroup>
