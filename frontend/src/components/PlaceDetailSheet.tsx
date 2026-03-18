@@ -55,30 +55,29 @@ export default function PlaceDetailSheet({
 
   return (
     <AnimatePresence>
-      {place && (
-        <>
-          {/* Backdrop */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onClose}
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm z-40"
-          />
+      <>
+        {/* Backdrop */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={onClose}
+          className="absolute inset-0 bg-black/60 backdrop-blur-sm z-40"
+        />
 
-          {/* Bottom Sheet */}
-          <motion.div
-            initial={{ y: '100%' }}
-            animate={{ y: 0 }}
-            exit={{ y: '100%' }}
-            transition={{
-              type: 'spring',
-              damping: 35,
-              stiffness: 300,
-              mass: 0.8
-            }}
-            className="absolute bottom-0 left-0 right-0 bg-[#12121a] rounded-t-3xl border-t border-white/10 z-50 max-h-[85vh] overflow-y-auto"
-          >
+        {/* Bottom Sheet */}
+        <motion.div
+          initial={{ y: '100%' }}
+          animate={{ y: 0 }}
+          exit={{ y: '100%' }}
+          transition={{
+            type: 'spring',
+            damping: 35,
+            stiffness: 300,
+            mass: 0.8
+          }}
+          className="absolute bottom-0 left-0 right-0 bg-[#12121a] rounded-t-3xl border-t border-white/10 z-50 max-h-[85vh] overflow-y-auto"
+        >
             {/* Handle */}
             <div className="sticky top-0 bg-[#12121a] z-20 pt-4 pb-2 rounded-t-3xl">
               <div className="w-12 h-1.5 bg-gray-700 rounded-full mx-auto" />
@@ -220,9 +219,8 @@ export default function PlaceDetailSheet({
                 </div>
               </div>
             </div>
-          </motion.div>
-        </>
-      )}
+        </motion.div>
+      </>
     </AnimatePresence>
   );
 }
