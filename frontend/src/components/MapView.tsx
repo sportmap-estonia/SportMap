@@ -258,7 +258,7 @@ export default function MapView() {
   }, []);
 
   return (
-    <div className="w-full h-[calc(100vh-4rem)] relative">
+    <div className="w-full h-full relative">
       <style>{`
         .mapboxgl-ctrl-top-right {
           top: 60px !important;

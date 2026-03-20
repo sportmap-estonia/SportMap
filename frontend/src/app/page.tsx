@@ -2,7 +2,7 @@ import MapView from "@/components/MapView";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-zinc-50 font-sans dark:bg-black p-0 m-0">
+    <div className="h-full w-full bg-zinc-50 font-sans dark:bg-black">
       <MapView />
     </div>
   );
