@@ -18,6 +18,7 @@ var googleClientId = builder.AddParameter("google-client-id", secret: true);
 var googleClientSecret = builder.AddParameter("google-client-secret", secret: true);
 var googleRedirectUri = builder.AddParameter("google-redirect-uri");
 
+var cache = builder.AddRedis("cache");
 var pgDb = builder.AddPostgres("postgres", pgUsername, pgPassword)
     .WithDataVolume(isReadOnly: false)
     .WithPgAdmin(pgAdmin => pgAdmin.WithHostPort(5050))

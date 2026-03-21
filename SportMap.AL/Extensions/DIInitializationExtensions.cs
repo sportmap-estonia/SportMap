@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using SportMap.AL.Abstractions.Services;
+using SportMap.DAL.Cache;
+using SportMap.AL.Abstractions.Services;
 using SportMap.AL.Common;
 
 namespace SportMap.Al.Extensions
@@ -11,6 +13,7 @@ namespace SportMap.Al.Extensions
             // TODO Register Services
             serviceCollection.AddScoped<IAuthService, AuthService>();
             serviceCollection.AddScoped<IJwtService, JwtService>();
+            serviceCollection.AddSingleton<ICacheService, RedisCacheService>();
         }
     }
 }

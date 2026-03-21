@@ -5,7 +5,6 @@ namespace SportMap.DAL.DataAccess
 {
     public class UnitOfWork(AppDbContext dbContext) : IUnitOfWork
     {
-        private readonly AppDbContext _context = dbContext;
         private bool disposed = false;
 
         #region Repositories
@@ -13,7 +12,7 @@ namespace SportMap.DAL.DataAccess
 
         public void Save()
         {
-            _context.SaveChanges();
+            dbContext.SaveChanges();
         }
 
         protected virtual void Dispose(bool disposing)
@@ -22,7 +21,7 @@ namespace SportMap.DAL.DataAccess
             {
                 if (disposing)
                 {
-                    _context.Dispose();
+                    dbContext.Dispose();
                 }
             }
             this.disposed = true;
