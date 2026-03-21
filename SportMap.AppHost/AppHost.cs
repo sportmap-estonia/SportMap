@@ -1,10 +1,9 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-var cache = builder.AddRedis("cache");
-
 var pgUsername = builder.AddParameter("postgres-username", secret: true);
 var pgPassword = builder.AddParameter("postgres-password", secret: true);
 
+var cache = builder.AddRedis("cache");
 var pgDb = builder.AddPostgres("postgres", pgUsername, pgPassword)
     .WithDataVolume(isReadOnly: false)
     .WithPgAdmin(pgAdmin => pgAdmin.WithHostPort(5050))

@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using SportMap.AL.Abstractions.Services;
+using SportMap.DAL.Cache;
 
 namespace SportMap.Al.Extensions
 {
@@ -6,7 +8,7 @@ namespace SportMap.Al.Extensions
     {
         public static void AddALServices(this IServiceCollection serviceCollection)
         {
-            // TODO Register Services
+            serviceCollection.AddSingleton<ICacheService, RedisCacheService>();
         }
     }
 }
