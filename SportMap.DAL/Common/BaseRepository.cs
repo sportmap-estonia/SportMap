@@ -9,8 +9,8 @@ namespace SportMap.DAL.Common
 {
     public abstract class BaseRepository<TData> : IRepository<TData> where TData : BaseData
     {
-        private readonly ILogger _logger;
         private readonly AppDbContext _context;
+        protected readonly ILogger _logger;
         protected readonly DbSet<TData> _dbSet;
 
         protected BaseRepository(AppDbContext context, ILogger logger)
