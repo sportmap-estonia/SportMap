@@ -26,7 +26,7 @@ public static class Extensions
         builder.ConfigureOpenTelemetry();
         builder.AddDefaultHealthChecks();
 
-        builder.Services.AddDALServices();
+        builder.Services.AddDALServices(builder.Configuration);
         builder.Services.AddBLLServices();
         builder.Services.AddALServices();
         builder.Services.AddServiceDiscovery();
