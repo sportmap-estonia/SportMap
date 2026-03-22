@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add service defaults & Aspire client integrations.
 builder.AddServiceDefaults();
-builder.AddRedisOutputCache("cache");
+builder.AddRedisOutputCache("redis");
 
 builder.AddNpgsqlDataSource(connectionName: "sportmapdb");
 

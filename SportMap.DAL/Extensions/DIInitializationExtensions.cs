@@ -11,9 +11,10 @@ namespace SportMap.DAL.Extensions
     {
         public static void AddDALServices(this IServiceCollection serviceCollection, IConfiguration configuration)
         {
-            serviceCollection.AddDbContextPool<AppDbContext>(options =>
+            serviceCollection.AddDbContextPool<AppDbContext>(options => 
                 options.UseNpgsql(configuration.GetConnectionString("sportmapdb")));
-            
+
+            serviceCollection.AddScoped<IUnitOfWork, UnitOfWork>();
             serviceCollection.AddScoped<IUserRepository, UserRepository>();
         }
     }

@@ -5,8 +5,9 @@ using StackExchange.Redis;
 
 namespace SportMap.DAL.Cache
 {
-    public sealed class RedisCacheService(IConnectionMultiplexer connectionMultiplexer, ILogger logger) : ICacheService
+    public sealed class RedisCacheService(IConnectionMultiplexer connectionMultiplexer, ILoggerFactory factory) : ICacheService
     {
+        private readonly ILogger logger = factory.CreateLogger(nameof(RedisCacheService));
         private readonly IDatabase _database = connectionMultiplexer.GetDatabase();
 
         public async Task<T?> GetAsync<T>(string key, CancellationToken cancellationToken = default)
