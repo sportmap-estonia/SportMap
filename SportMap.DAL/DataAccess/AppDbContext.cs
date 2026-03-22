@@ -5,7 +5,7 @@ namespace SportMap.DAL.DataContext
 {
     public class AppDbContext : DbContext
     {
-        internal AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         public DbSet<User> Users => Set<User>();
         public DbSet<UserRole> UserRoles => Set<UserRole>();
