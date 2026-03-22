@@ -1,3 +1,8 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Scalar.AspNetCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add service defaults & Aspire client integrations.
@@ -11,6 +16,28 @@ builder.Services.AddProblemDetails();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.Services.AddControllers();
+
+var secretKey = builder.Configuration["Jwt:SecretKey"]
+    ?? throw new InvalidOperationException("Jwt:SecretKey missing");
+
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey    = true,
+            IssuerSigningKey            = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
+            ValidateIssuer              = true,
+            ValidIssuer                 = builder.Configuration["Jwt:Issuer"],
+            ValidateAudience            = true,
+            ValidAudience               = builder.Configuration["Jwt:Audience"],
+            ValidateLifetime            = true,
+            ClockSkew                   = TimeSpan.FromSeconds(30),
+        };
+    });
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -20,10 +47,14 @@ app.UseExceptionHandler();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.MapScalarApiReference();
 }
 
 app.UseOutputCache();
 app.MapDefaultEndpoints();
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseFileServer();
+app.MapControllers();
 
 app.Run();

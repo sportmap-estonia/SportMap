@@ -31,7 +31,7 @@ namespace SportMap.AL.Common
                     Id          = Guid.NewGuid(),
                     GoogleId    = payload.Subject,
                     Email       = payload.Email,
-                    Username    = payload.Email.Split('@')[0], // for now use mail initials for username
+                    UserName    = payload.Email.Split('@')[0], // for now use mail initials for username
                     FirstName   = payload.GivenName ?? payload.Name.Split(' ').FirstOrDefault() ?? string.Empty,
                     LastName    = payload.FamilyName,
                     CreatedAt   = DateTime.UtcNow
