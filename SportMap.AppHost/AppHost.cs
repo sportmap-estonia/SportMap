@@ -1,6 +1,12 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-var cache = builder.AddRedis("cache");
+var compose = builder.AddDockerComposeEnvironment("compose");
+
+var cache = builder.AddRedis("cache")
+    .PublishAsDockerComposeService((resource, service) =>
+    {
+        service.Name = "cache";
+    });
 
 var pgUsername = builder.AddParameter("postgres-username", secret: true);
 var pgPassword = builder.AddParameter("postgres-password", secret: true);
@@ -16,13 +22,22 @@ var server = builder.AddProject<Projects.SportMap_PL>("server")
     .WithReference(pgDb)
     .WaitFor(pgDb)
     .WithHttpHealthCheck("/health")
-    .WithExternalHttpEndpoints();
+    .WithExternalHttpEndpoints()
+    .PublishAsDockerComposeService((resource, service) =>
+    {
+        service.Name = "server";
+    });
 
-var pnpmApp = builder.AddJavaScriptApp("webfrontend", "../frontend")
-    .WithHttpEndpoint(port: 3000, env: "PORT")
+#AddContainer(resourceName, imageName)
+var webfrontend = builder.AddContainer("webfrontend", "webfrontend")
+    .WithDockerfile("../frontend")
+    .WithHttpEndpoint(port: 3000, targetPort: 3000, env: "PORT")
     .WithReference(server)
     .WaitFor(server)
     .WithExternalHttpEndpoints()
-    .WithPnpm();
+    .PublishAsDockerComposeService((resource, service) =>
+    {
+        service.Name = "webfrontend";
+    });
 
 builder.Build().Run();
