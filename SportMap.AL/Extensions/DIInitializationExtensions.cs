@@ -9,7 +9,7 @@ namespace SportMap.Al.Extensions
         public static void AddALServices(this IServiceCollection serviceCollection)
         {
             // TODO Register Services
-            serviceCollection.AddHttpClient<IAuthService, AuthService>();
+            serviceCollection.AddScoped<IAuthService, AuthService>();
         }
     }
 }

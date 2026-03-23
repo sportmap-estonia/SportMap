@@ -1,4 +1,5 @@
 using System.Text;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
@@ -17,12 +18,26 @@ builder.Services.AddProblemDetails();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
+builder.Services.AddDataProtection();
+builder.Services.AddCookiePolicy(options =>
+{
+    options.MinimumSameSitePolicy = builder.Environment.IsDevelopment()
+        ? SameSiteMode.None
+        : SameSiteMode.Lax;
+   options.Secure = CookieSecurePolicy.SameAsRequest;
+});
 
 var secretKey = builder.Configuration["Jwt:SecretKey"]
     ?? throw new InvalidOperationException("Jwt:SecretKey missing");
 
 builder.Services
-    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddAuthentication(options =>
+    {
+        options.DefaultScheme           = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme  = GoogleDefaults.AuthenticationScheme;
+        options.DefaultSignInScheme     = "Cookies";
+    })
+    .AddCookie("Cookies")
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
@@ -36,7 +51,15 @@ builder.Services
             ValidateLifetime            = true,
             ClockSkew                   = TimeSpan.FromSeconds(30),
         };
+    })
+    .AddGoogle(options =>
+    {
+        options.ClientId = builder.Configuration["Google:ClientId"]
+            ?? throw new InvalidOperationException("Google:ClientId missing");
+        options.ClientSecret = builder.Configuration["Google:ClientSecret"]
+            ?? throw new InvalidOperationException("Google:ClientSecret missing");
     });
+
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
@@ -52,6 +75,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseOutputCache();
 app.MapDefaultEndpoints();
+app.UseCookiePolicy();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseFileServer();
