@@ -1,6 +1,6 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-var compose = builder.AddDockerComposeEnvironment("compose");
+builder.AddDockerComposeEnvironment("compose");
 
 var cache = builder.AddRedis("cache")
     .PublishAsDockerComposeService((resource, service) =>
@@ -29,7 +29,7 @@ var server = builder.AddProject<Projects.SportMap_PL>("server")
     });
 
 #AddContainer(resourceName, imageName)
-var webfrontend = builder.AddContainer("webfrontend", "webfrontend")
+builder.AddContainer("webfrontend", "webfrontend")
     .WithDockerfile("../frontend")
     .WithHttpEndpoint(port: 3000, targetPort: 3000, env: "PORT")
     .WithReference(server)
