@@ -1,7 +1,7 @@
-﻿using System.Linq.Expressions;
-using SportMap.DAL.Models;
+﻿using DomainLayer.Common;
+using System.Linq.Expressions;
 
-namespace SportMap.DAL.Common
+namespace SportMap.DAL.Abstractions
 {
     public interface IRepository<TData> where TData : BaseData
     {

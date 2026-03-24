@@ -1,8 +1,9 @@
-﻿using SportMap.DAL.DataContext;
+﻿using SportMap.DAL.Abstractions;
+using SportMap.DAL.DataContext;
 
 namespace SportMap.DAL.DataAccess
 {
-    public class UnitOfWork(AppDbContext dbContext) : IDisposable
+    public class UnitOfWork(AppDbContext dbContext) : IUnitOfWork
     {
         private readonly AppDbContext _context = dbContext;
         private bool disposed = false;
@@ -14,7 +15,6 @@ namespace SportMap.DAL.DataAccess
         {
             _context.SaveChanges();
         }
-
 
         protected virtual void Dispose(bool disposing)
         {

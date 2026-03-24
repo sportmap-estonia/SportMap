@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SportMap.DAL.Models
+namespace DomainLayer.Common
 {
     public abstract class BaseData
     {

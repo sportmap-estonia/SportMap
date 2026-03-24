@@ -1,8 +1,9 @@
-﻿using System.Linq.Expressions;
+﻿using DomainLayer.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using SportMap.DAL.Abstractions;
 using SportMap.DAL.DataContext;
-using SportMap.DAL.Models;
+using System.Linq.Expressions;
 
 namespace SportMap.DAL.Common
 {
