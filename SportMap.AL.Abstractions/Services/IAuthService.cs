@@ -4,6 +4,6 @@ namespace SportMap.AL.Abstractions.Services
 {
     public interface IAuthService
     {
-        Task<AuthResponseDto> GoogleCallbackAsync(GoogleUserInfoDto googleUserInfo, CancellationToken ct = default);
+        Task<AuthResponseDto> AuthenticateWithGoogleAsync(GoogleUserInfoDto googleUserInfo, CancellationToken ct = default);
     }
 }

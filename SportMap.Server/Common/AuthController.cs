@@ -36,7 +36,7 @@ namespace SportMap.PL.Common
                 FamilyName = result.Principal!.FindFirst(ClaimTypes.Surname)?.Value
             };
 
-            var authResult = await authService.GoogleCallbackAsync(userGoogleInfo, cancellationToken);
+            var authResult = await authService.AuthenticateWithGoogleAsync(userGoogleInfo, cancellationToken);
             Response.Cookies.Append("access_token", authResult.AccessToken, new CookieOptions
             {
                 HttpOnly = true,

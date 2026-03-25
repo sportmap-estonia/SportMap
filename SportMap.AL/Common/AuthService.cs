@@ -16,7 +16,7 @@ namespace SportMap.AL.Common
         IConfiguration configuration
     ) : IAuthService
     {
-        public async Task<AuthResponseDto> GoogleCallbackAsync(GoogleUserInfoDto googleUserInfo, CancellationToken cancellationToken = default)
+        public async Task<AuthResponseDto> AuthenticateWithGoogleAsync(GoogleUserInfoDto googleUserInfo, CancellationToken cancellationToken = default)
         {
             var user = await userRepository.GetByGoogleIdAsync(googleUserInfo.GoogleId, cancellationToken);
             if (user is null)
