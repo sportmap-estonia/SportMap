@@ -1,4 +1,5 @@
-using SportMap.DAL.Models;
+using DomainLayer.Entities;
+using SportMap.DAL.Abstractions;
 
 namespace SportMap.DAL.Common
 {

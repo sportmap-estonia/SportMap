@@ -1,8 +1,8 @@
+using DomainLayer.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SportMap.DAL.Common;
 using SportMap.DAL.DataContext;
-using SportMap.DAL.Models;
 
 namespace SportMap.DAL.DataAccess
 {

@@ -1,4 +1,4 @@
-﻿using DomainLayer.Common;
+﻿using DomainLayer.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace SportMap.DAL.DataContext

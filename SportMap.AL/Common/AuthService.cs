@@ -2,12 +2,12 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using DomainLayer.Entities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using SportMap.AL.Abstractions.Dtos;
 using SportMap.AL.Abstractions.Services;
 using SportMap.DAL.Common;
-using SportMap.DAL.Models;
 
 namespace SportMap.AL.Common
 {

@@ -1,4 +1,6 @@
-namespace DomainLayer.Common
+using DomainLayer.Common;
+
+namespace DomainLayer.Entities
 {
     public class UserRole : BaseData
     {
