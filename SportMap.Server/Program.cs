@@ -54,10 +54,19 @@ builder.Services
     })
     .AddGoogle(options =>
     {
-        options.ClientId = builder.Configuration["Google:ClientId"]
-            ?? throw new InvalidOperationException("Google:ClientId missing");
-        options.ClientSecret = builder.Configuration["Google:ClientSecret"]
-            ?? throw new InvalidOperationException("Google:ClientSecret missing");
+        var clientId = builder.Configuration["Google:ClientId"];
+        var clientSecret = builder.Configuration["Google:ClientSecret"];
+
+        if (!string.IsNullOrEmpty(clientId) && !string.IsNullOrEmpty(clientSecret))
+        {
+            options.ClientId = clientId;
+            options.ClientSecret = clientSecret;
+        }
+        else
+        {
+            options.ClientId = "disabled";
+            options.ClientSecret = "disabled";
+        }
     });
 
 builder.Services.AddAuthorization();
