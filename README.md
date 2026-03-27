@@ -10,27 +10,21 @@ This project uses PostgreSQL with credentials stored securely via .NET User Secr
 - [.NET 8 SDK](https://dotnet.microsoft.com/download) or later
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 
-### Configure Database Credentials
+### Configure environment variables
 
-1. **Initialize user secrets** in the AppHost project:
+1. **Change directory to AppHost project:**
 ```bash
-   cd src/SportMap.AppHost
-   dotnet user-secrets init
+   cd SportMap.AppHost
 ```
 
-2. **Set PostgreSQL credentials**:
+2. **Create a copy of the example config:**
 ```bash
-   dotnet user-secrets set "Parameters:postgres-username" "your_username"
-   dotnet user-secrets set "Parameters:postgres-password" "your_secure_password"
+   cp appsettings.Development.example.json appsettings.Development.json
 ```
 
-3. **Verify secrets** (optional):
+3. **Open `appsettings.Development.json` and fill in the parameters**
+
+4. **Run the project - parameters are visible on Aspire dashboard**
 ```bash
-   dotnet user-secrets list
-```
-
-   You should see:
-```
-   Parameters:postgres-username = your_username
-   Parameters:postgres-password = your_secure_password
+   dotnet run
 ```
