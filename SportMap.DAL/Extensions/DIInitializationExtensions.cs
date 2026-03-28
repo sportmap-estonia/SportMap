@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SportMap.DAL.Common;
+using SportMap.DAL.Abstractions;
 using SportMap.DAL.DataAccess;
 using SportMap.DAL.DataContext;
 

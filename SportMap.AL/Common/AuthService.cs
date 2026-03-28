@@ -1,7 +1,7 @@
 using DomainLayer.Entities;
 using SportMap.AL.Abstractions.Dtos;
 using SportMap.AL.Abstractions.Services;
-using SportMap.DAL.Common;
+using SportMap.DAL.Abstractions;
 
 namespace SportMap.AL.Common
 {

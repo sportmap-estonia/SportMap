@@ -1,7 +1,6 @@
 using DomainLayer.Entities;
-using SportMap.DAL.Abstractions;
 
-namespace SportMap.DAL.Common
+namespace SportMap.DAL.Abstractions
 {
     public interface IUserRepository : IRepository<User>
     {

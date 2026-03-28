@@ -1,6 +1,7 @@
 using DomainLayer.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using SportMap.DAL.Abstractions;
 using SportMap.DAL.Common;
 using SportMap.DAL.DataContext;
 
