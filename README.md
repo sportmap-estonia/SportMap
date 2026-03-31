@@ -10,21 +10,39 @@ This project uses PostgreSQL with credentials stored securely via .NET User Secr
 - [.NET 8 SDK](https://dotnet.microsoft.com/download) or later
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 
-### Configure environment variables
+### Configure Credentials
 
-1. **Change directory to AppHost project:**
+1. **Initialize user secrets** in the AppHost project:
 ```bash
-   cd SportMap.AppHost
+   cd src/SportMap.AppHost
+   dotnet user-secrets init
 ```
 
-2. **Create a copy of the example config:**
+2. **Set PostgreSQL credentials**:
 ```bash
-   cp appsettings.Development.example.json appsettings.Development.json
+   dotnet user-secrets set "Parameters:postgres-username" "your_username"
+   dotnet user-secrets set "Parameters:postgres-password" "your_secure_password"
 ```
 
-3. **Open `appsettings.Development.json` and fill in the parameters**
-
-4. **Run the project - parameters are visible on Aspire dashboard**
+3. **Set JWT and Google credentials for authentication**:
 ```bash
-   dotnet run
+   dotnet user-secrets set "Parameters:jwt-secret" "your_jwt_secret"
+   dotnet user-secrets set "Parameters:jwt-issuer" "SportMap"
+   dotnet user-secrets set "Parameters:jwt-audience" "SportMapUsers"
+   dotnet user-secrets set "Parameters:google-client-id" "your_google_client_id"
+   dotnet user-secrets set "Parameters:google-client-secret" "your_google_client_secret"
+   dotnet user-secrets set "Parameters:google-redirect-uri" "http://localhost:3000"
 ```
+   Connection String could be added here as well for migrations.
+
+4. **Verify secrets** (optional):
+```bash
+   dotnet user-secrets list
+```
+
+   You should see:
+```
+   Parameters:postgres-username = your_username
+   Parameters:postgres-password = your_secure_password
+```
+   Parameters are visible on Aspire Dashboard.

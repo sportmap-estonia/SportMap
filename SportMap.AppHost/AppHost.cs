@@ -41,7 +41,7 @@ var server = builder.AddProject<Projects.SportMap_PL>("server")
         service.Name = "server";
     });
 
-#AddContainer(resourceName, imageName)
+// #AddContainer(resourceName, imageName)
 builder.AddContainer("webfrontend", "webfrontend")
     .WithDockerfile("../frontend")
     .WithHttpEndpoint(port: 3000, targetPort: 3000, env: "PORT")
