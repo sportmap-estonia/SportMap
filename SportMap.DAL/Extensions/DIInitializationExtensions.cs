@@ -19,6 +19,7 @@ namespace SportMap.DAL.Extensions
             serviceCollection.AddScoped<IUnitOfWork, UnitOfWork>();
             serviceCollection.AddScoped<IUserRepository, UserRepository>();
             serviceCollection.AddScoped<IPostRepository, PostRepository>();
+            serviceCollection.AddScoped<IImageRepository, ImageRepository>();
         }
     }
 }

@@ -17,10 +17,54 @@ namespace SportMap.DAL.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.4")
+                .HasAnnotation("ProductVersion", "10.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("DomainLayer.Entities.ImageData", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("EntityId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Path")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("RemovedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("ReviewerId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("UploaderId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReviewerId");
+
+                    b.HasIndex("UploaderId");
+
+                    b.ToTable("Images");
+                });
 
             modelBuilder.Entity("DomainLayer.Entities.Personalization", b =>
                 {
@@ -32,11 +76,9 @@ namespace SportMap.DAL.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("ModifiedAt")
-                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("RemovedAt")
@@ -44,9 +86,6 @@ namespace SportMap.DAL.Migrations
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
-
-                    b.Property<long>("XMin")
-                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
@@ -58,46 +97,6 @@ namespace SportMap.DAL.Migrations
                     b.ToTable("Personalization");
                 });
 
-            modelBuilder.Entity("DomainLayer.Entities.Post", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime?>("ModifiedAt")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime?>("RemovedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.Property<uint>("XMin")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Posts");
-                });
-
             modelBuilder.Entity("DomainLayer.Entities.PrivacyType", b =>
                 {
                     b.Property<Guid>("Id")
@@ -105,7 +104,6 @@ namespace SportMap.DAL.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
@@ -113,7 +111,6 @@ namespace SportMap.DAL.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("ModifiedAt")
-                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
@@ -122,9 +119,6 @@ namespace SportMap.DAL.Migrations
 
                     b.Property<DateTime?>("RemovedAt")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<long>("XMin")
-                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
@@ -141,7 +135,6 @@ namespace SportMap.DAL.Migrations
                         .HasColumnType("date");
 
                     b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
@@ -160,10 +153,12 @@ namespace SportMap.DAL.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("ModifiedAt")
-                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid?>("PersonalizationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("ProfilePictureId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime?>("RemovedAt")
@@ -176,9 +171,6 @@ namespace SportMap.DAL.Migrations
                     b.Property<Guid?>("UserRoleId")
                         .HasColumnType("uuid");
 
-                    b.Property<long>("XMin")
-                        .HasColumnType("bigint");
-
                     b.HasKey("Id");
 
                     b.HasIndex("Email")
@@ -186,6 +178,8 @@ namespace SportMap.DAL.Migrations
 
                     b.HasIndex("GoogleId")
                         .IsUnique();
+
+                    b.HasIndex("ProfilePictureId");
 
                     b.HasIndex("UserRoleId");
 
@@ -199,7 +193,6 @@ namespace SportMap.DAL.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
@@ -207,7 +200,6 @@ namespace SportMap.DAL.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("ModifiedAt")
-                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
@@ -217,12 +209,23 @@ namespace SportMap.DAL.Migrations
                     b.Property<DateTime?>("RemovedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<long>("XMin")
-                        .HasColumnType("bigint");
-
                     b.HasKey("Id");
 
                     b.ToTable("UserRoles");
+                });
+
+            modelBuilder.Entity("DomainLayer.Entities.ImageData", b =>
+                {
+                    b.HasOne("DomainLayer.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("ReviewerId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("DomainLayer.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UploaderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("DomainLayer.Entities.Personalization", b =>
@@ -246,6 +249,11 @@ namespace SportMap.DAL.Migrations
 
             modelBuilder.Entity("DomainLayer.Entities.User", b =>
                 {
+                    b.HasOne("DomainLayer.Entities.ImageData", null)
+                        .WithMany()
+                        .HasForeignKey("ProfilePictureId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("DomainLayer.Entities.UserRole", "UserRole")
                         .WithMany()
                         .HasForeignKey("UserRoleId")
