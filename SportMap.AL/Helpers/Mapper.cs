@@ -1,25 +1,50 @@
-﻿using System.Reflection;
-
-namespace SportMap.AL.Helpers
+﻿namespace SportMap.AL.Helpers
 {
     internal static class Mapper
     {
-        public static T Map<T>(object source) where T : class, new()
+        public static TTo Map<TFrom, TTo>(TFrom from) where TTo : new()
         {
-            var target = new T();
-            var sourceProps = source.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
-            var targetProps = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
-
-            foreach (var sourceProp in sourceProps)
+            var to = new TTo();
+            if (from is null) return to;
+            foreach (var property in from.GetType().GetProperties())
             {
-                var targetProp = targetProps.FirstOrDefault(p => p.Name == sourceProp.Name && p.CanWrite);
-                if (targetProp != null)
+                var name = property.Name;
+                var p = to.GetType().GetProperty(name);
+                if (p is null) continue;
+                var v = property.GetValue(from);
+                try
                 {
-                    targetProp.SetValue(target, sourceProp.GetValue(source));
+                    p.SetValue(to, v);
+                }
+                catch (Exception e)
+                {
+                    continue;
                 }
             }
-
-            return target;
+            return to;
+        }
+        public static TTo Map<TFrom, TTo>(TFrom from, params string[] exclude) where TTo : new()
+        {
+            var to = new TTo();
+            if (to is null) return default;
+            if (from is null) return to;
+            foreach (var property in from.GetType().GetProperties())
+            {
+                var name = property.Name;
+                if (exclude?.Contains(name) ?? false) continue;
+                var p = to.GetType().GetProperty(name);
+                if (p is null) continue;
+                var v = property.GetValue(from);
+                try
+                {
+                    p.SetValue(to, v);
+                }
+                catch (Exception e)
+                {
+                    continue;
+                }
+            }
+            return to;
         }
     }
 }

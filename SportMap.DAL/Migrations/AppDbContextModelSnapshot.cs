@@ -91,6 +91,7 @@ namespace SportMap.DAL.Migrations
                         .HasColumnType("date");
 
                     b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
@@ -109,6 +110,7 @@ namespace SportMap.DAL.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("ModifiedAt")
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid?>("PersonalizationId")

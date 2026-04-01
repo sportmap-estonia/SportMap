@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 
 namespace SportMap.DAL.Abstractions
 {
-    public interface IRepository<TData> where TData : BaseData
+    public interface IRepository<TData> where TData : BaseEntity
     {
         Task<TData?> GetByIdAsync(Guid id, CancellationToken ct = default);
         Task<IReadOnlyList<TData>> GetAllAsync(CancellationToken ct = default);

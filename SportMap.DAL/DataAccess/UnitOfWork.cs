@@ -1,13 +1,17 @@
-﻿using SportMap.DAL.Abstractions;
+﻿using Microsoft.Extensions.Logging;
+using SportMap.DAL.Abstractions;
+using SportMap.DAL.Abstractions.Repositories;
 using SportMap.DAL.DataContext;
+using SportMap.DAL.Repositories;
 
 namespace SportMap.DAL.DataAccess
 {
-    public class UnitOfWork(AppDbContext dbContext) : IUnitOfWork
+    public class UnitOfWork(AppDbContext dbContext, IPostRepository postRepo, ILogger<UnitOfWork> logger) : IUnitOfWork
     {
         private bool disposed = false;
 
         #region Repositories
+        public IPostRepository PostRepository => postRepo;
         #endregion
 
         public void Save()
