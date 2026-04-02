@@ -22,5 +22,22 @@ namespace SportMap.DAL.DataAccess
                 throw;
             }
         }
+
+        public async Task<User?> GetByIdWithProfileAsync(Guid id, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                return await _dbSet
+                    .Include(u => u.UserRole)
+                    .Include(u => u.Personalization)
+                        .ThenInclude(p => p.BirthdatePrivacyType)
+                    .FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
+            }
+            catch (Exception exception)
+            {
+                _logger.LogError(exception, $"{nameof(UserRepository)}.{nameof(GetByIdWithProfileAsync)}");
+                throw;
+            }
+        }
     }
 }

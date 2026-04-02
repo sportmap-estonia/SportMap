@@ -25,12 +25,8 @@ namespace SportMap.DAL.Common
             try
             {
                 var entity = await _dbSet.FindAsync(new[] { id }, ct).ConfigureAwait(false);
-
                 if (entity is null)
-                {
                     _logger.LogInformation($"{nameof(BaseRepository<TData>)}.{nameof(GetByIdAsync)}: Entity was not found");
-                }
-
                 return entity;
             }
             catch (Exception ex)

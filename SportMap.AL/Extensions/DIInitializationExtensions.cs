@@ -11,6 +11,7 @@ namespace SportMap.Al.Extensions
             // TODO Register Services
             serviceCollection.AddScoped<IAuthService, AuthService>();
             serviceCollection.AddScoped<IJwtService, JwtService>();
+            serviceCollection.AddScoped<IProfileService, ProfileService>();
         }
     }
 }
