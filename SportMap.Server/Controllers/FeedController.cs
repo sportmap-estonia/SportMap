@@ -1,12 +1,11 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using DomainLayer.Entities.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using SportMap.AL.DTOs;
 using SportMap.AL.UseCases.Feeds;
-using SportMap.AL.UseCases.Feeds.GetFeeds;
 using SportMap.PL.Common;
 using SportMap.PL.Extensions;
-using StatusType = DomainLayer.Entities.Enums.StatusType;
 
 namespace SportMap.PL.Controllers
 {
@@ -19,18 +18,25 @@ namespace SportMap.PL.Controllers
     {
         // GET: api/feed
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IReadOnlyList<PostDTO>>> Get()
+        public async Task<Results<InternalServerError, NotFound, Ok<IReadOnlyList<PostDTO>>>> Get()
         {
-            var query = new GetPostQuery(null, StatusType.Verified);
-            var result = await getPosts.Handle(query, CancellationToken.None);
+            AL.Abstractions.UseCases.Result<IReadOnlyList<PostDTO>>? result;
+
+            try
+            {
+                var query = new GetPostQuery(null, StatusType.Verified);
+                result = await getPosts.Handle(query, CancellationToken.None);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "{className}.{methodName}: Unhandled exception occured: {message}", nameof(FeedController), nameof(Get), e.Message);
+                return TypedResults.InternalServerError();
+            }
 
             if (result.HasError)
             {
                 _logger.LogError("{controllerName}.{methodName}: Error occurred while fetching posts: {ErrorMessage}", nameof(FeedController), nameof(Get), result.ErrorMessage);
-                return BadRequest(result.ErrorMessage);
+                return TypedResults.InternalServerError();
             }
 
             var posts = result.Data;
@@ -38,26 +44,33 @@ namespace SportMap.PL.Controllers
             if (posts!.Count == 0)
             {
                 _logger.LogWarning("{controllerName}.{methodName}: No posts found", nameof(FeedController), nameof(Get));
-                return NotFound();
+                return TypedResults.NotFound();
             }
 
-            return Ok(posts);
+            return TypedResults.Ok(posts);
         }
 
         // GET: api/feed
         [HttpGet("{id:guid}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<PostDTO>> Get(Guid id)
+        public async Task<Results<InternalServerError, NotFound, Ok<PostDTO>>> Get(Guid id)
         {
-            var query = new GetPostQuery(null, StatusType.Verified);
-            var result = await getPosts.Handle(query, CancellationToken.None);
+            AL.Abstractions.UseCases.Result<IReadOnlyList<PostDTO>> result;
+
+            try
+            {
+                var query = new GetPostQuery(null, StatusType.Verified);
+                result = await getPosts.Handle(query, CancellationToken.None);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "{className}.{methodName}: Unhandled exception occured: {message}", nameof(FeedController), nameof(Get), e.Message);
+                return TypedResults.InternalServerError();
+            }
 
             if (result.HasError)
             {
                 _logger.LogError("{controllerName}.{methodName}: Error occurred while fetching posts: {ErrorMessage}", nameof(FeedController), nameof(Get), result.ErrorMessage);
-                return BadRequest(result.ErrorMessage);
+                return TypedResults.InternalServerError();
             }
 
             var posts = result.Data;
@@ -65,25 +78,22 @@ namespace SportMap.PL.Controllers
             if (posts!.Count == 0)
             {
                 _logger.LogWarning("{controllerName}.{methodName}: No posts found", nameof(FeedController), nameof(Get));
-                return NotFound();
+                return TypedResults.NotFound();
             }
 
-            return Ok(posts[0]);
+            return TypedResults.Ok(posts[0]);
         }
 
         // POST: api/feed
         [HttpPost]
         [AllowAnonymous]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<PostDTO>> CreatePost([FromBody] CreatePostRequest request)
+        public async Task<Results<InternalServerError, BadRequest, CreatedAtRoute<PostDTO>>> CreatePost([FromBody] CreatePostRequest request)
         {
             if (request.Title.IsNullOrEmpty() || request.Content.IsNullOrEmpty())
             {
                 _logger.LogWarning("Title or content is null or empty");
 
-                return BadRequest("Title and content cannot be null or empty");
+                return TypedResults.BadRequest();
             }
 
             var command = new CreatePostCommand(request.Title, request.Content);
@@ -91,10 +101,10 @@ namespace SportMap.PL.Controllers
 
             if (result.HasError)
             {
-                return BadRequest(result.ErrorMessage);
+                return TypedResults.InternalServerError();
             }
 
-            return CreatedAtAction(nameof(CreatePost), new { id = result.Data.Id }, result.Data);
+            return TypedResults.CreatedAtRoute(result.Data);
         }
     }
 

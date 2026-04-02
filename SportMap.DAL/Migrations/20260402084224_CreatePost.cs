@@ -11,6 +11,34 @@ namespace SportMap.DAL.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AddColumn<long>(
+                name: "XMin",
+                table: "Users",
+                type: "bigint",
+                nullable: false,
+                defaultValue: 0L);
+
+            migrationBuilder.AddColumn<long>(
+                name: "XMin",
+                table: "UserRoles",
+                type: "bigint",
+                nullable: false,
+                defaultValue: 0L);
+
+            migrationBuilder.AddColumn<long>(
+                name: "XMin",
+                table: "PrivacyTypes",
+                type: "bigint",
+                nullable: false,
+                defaultValue: 0L);
+
+            migrationBuilder.AddColumn<long>(
+                name: "XMin",
+                table: "Personalization",
+                type: "bigint",
+                nullable: false,
+                defaultValue: 0L);
+
             migrationBuilder.CreateTable(
                 name: "Posts",
                 columns: table => new
@@ -35,6 +63,22 @@ namespace SportMap.DAL.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Posts");
+
+            migrationBuilder.DropColumn(
+                name: "XMin",
+                table: "Users");
+
+            migrationBuilder.DropColumn(
+                name: "XMin",
+                table: "UserRoles");
+
+            migrationBuilder.DropColumn(
+                name: "XMin",
+                table: "PrivacyTypes");
+
+            migrationBuilder.DropColumn(
+                name: "XMin",
+                table: "Personalization");
         }
     }
 }

@@ -1,14 +1,12 @@
-﻿using DomainLayer.Entities;
+﻿using DomainLayer.Entities.Enums;
 using Microsoft.Extensions.Logging;
 using SportMap.AL.Abstractions.Services;
 using SportMap.AL.Abstractions.UseCases;
 using SportMap.AL.DTOs;
 using SportMap.AL.Extensions;
 using SportMap.DAL.Abstractions;
-using static SportMap.AL.Helpers.Mapper;
-using StatusType = DomainLayer.Entities.Enums.StatusType;
 
-namespace SportMap.AL.UseCases.Feeds.GetFeeds
+namespace SportMap.AL.UseCases.Feeds
 {
     public class GetPostQueryHandler(IUnitOfWork unitOfWork, ICacheService cache, ILogger<GetPostQueryHandler> logger) : IQueryHandler<GetPostQuery, IReadOnlyList<PostDTO>>
     {
@@ -29,17 +27,22 @@ namespace SportMap.AL.UseCases.Feeds.GetFeeds
 
                 var postData= await unitOfWork.PostRepository.GetAllAsync(cancellationToken);
                 var filteredPosts = postData
-                    .Where(post => post.Status == query.Status)
+                    .Where(post => post.Status.Equals(query.Status))
                     .FilterIfNotNull(query.Id, (post, id) => post.Id == id);
 
                 posts = filteredPosts
-                    .Select(Map<Post, PostDTO>)
+                    .Select(post => post.Map())
                     .ToList()
                     .AsReadOnly();
             }
+            catch (OperationCanceledException oce) when (cancellationToken.IsCancellationRequested)
+            {
+                logger.LogWarning(oce, "{class}.{method}: Operation was canceled.", nameof(GetPostQueryHandler), nameof(Handle));
+                return Result<IReadOnlyList<PostDTO>>.WithError("Operation was canceled.");
+            }
             catch (Exception e)
             {
-                logger.LogError(e, "{class}.{method}: {message}", nameof(GetPostQueryHandler), nameof(Handle), e.Message);
+                logger.LogError(e, "{class}.{method}: Unhandled exception {message}", nameof(GetPostQueryHandler), nameof(Handle), e.Message);
                 return Result<IReadOnlyList<PostDTO>>.WithError(e.Message);
             }
 

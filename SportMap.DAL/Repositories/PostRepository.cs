@@ -6,5 +6,5 @@ using SportMap.DAL.DataContext;
 
 namespace SportMap.DAL.Repositories
 {
-    public class PostRepository(AppDbContext context, ILogger<PostRepository> logger) : BaseRepository<Post>(context, logger), IPostRepository;
+    public class PostRepository(AppDbContext context, ILogger<PostRepository> logger) : BaseRepository<Post>(context, logger, context.Posts), IPostRepository;
 }

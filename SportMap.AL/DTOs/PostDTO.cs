@@ -1,4 +1,5 @@
-﻿using SportMap.AL.Abstractions;
+﻿using DomainLayer.Entities.Enums;
+using SportMap.AL.Abstractions;
 
 namespace SportMap.AL.DTOs
 {

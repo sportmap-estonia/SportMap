@@ -7,12 +7,12 @@ using System.Linq.Expressions;
 
 namespace SportMap.DAL.Common
 {
-    public abstract class BaseRepository<TData>(AppDbContext context, ILogger logger) : IRepository<TData>
+    public abstract class BaseRepository<TData>(AppDbContext context, ILogger logger, DbSet<TData> dbSet) : IRepository<TData>
         where TData : BaseEntity
     {
-        private readonly AppDbContext _context;
-        protected readonly ILogger _logger;
-        protected readonly DbSet<TData> _dbSet;
+        private readonly AppDbContext _context = context;
+        protected readonly ILogger _logger = logger;
+        protected readonly DbSet<TData> _dbSet = dbSet;
 
         public async Task<TData?> GetByIdAsync(Guid id, CancellationToken ct = default)
         {
@@ -68,6 +68,7 @@ namespace SportMap.DAL.Common
             {
                 await _dbSet.AddAsync(entity, ct);
                 await context.SaveChangesAsync(ct);
+
                 return entity;
             }
             catch (Exception ex)

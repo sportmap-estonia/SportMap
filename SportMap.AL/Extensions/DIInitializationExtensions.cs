@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using SportMap.AL.Abstractions.Services;
 using SportMap.AL.UseCases.Feeds;
-using SportMap.AL.UseCases.Feeds.GetFeeds;
 using SportMap.DAL.Cache;
 using SportMap.AL.Abstractions.Services;
 using SportMap.AL.Common;

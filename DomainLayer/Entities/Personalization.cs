@@ -3,7 +3,7 @@ using DomainLayer.Common;
 
 namespace DomainLayer.Entities
 {
-    public class Personalization : BaseData
+    public class Personalization : BaseEntity
     {
         public Guid UserId { get; set; }
         public Guid BirthdatePrivacyId { get; set; }

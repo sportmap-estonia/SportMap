@@ -1,5 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using SportMap.AL.Abstractions.Services;
 using StackExchange.Redis;
 
@@ -7,6 +9,15 @@ namespace SportMap.DAL.Cache
 {
     public sealed class RedisCacheService(IConnectionMultiplexer connectionMultiplexer, ILogger<RedisCacheService> logger) : ICacheService
     {
+        private static class LogMessages
+        {
+            public const string RedisConnectionError = "{redisService}.{methodName}: Redis connection error: {key}";
+            public const string RedisTimeoutError = "{redisService}.{methodName}: Redis timeout: {key}";
+            public const string RedisError = "{redisService}.{methodName}: Redis error: {key}";
+            public const string OperationCancelledWarning = "{redisService}.{methodName}: The request with key {key} to Redis was cancelled";
+            public const string JsonSerializationError = "{redisService}.{methodName}: JSON deserialization error while getting value from cache: {message}";
+        }
+
         private readonly ILogger _logger = logger;
         private readonly IDatabase _database = connectionMultiplexer.GetDatabase();
 
@@ -17,9 +28,24 @@ namespace SportMap.DAL.Cache
                 var exists = _database.KeyExists(key);
                 return exists;
             }
-            catch (Exception e)
+            catch (RedisConnectionException e)
             {
-                _logger.LogError(e, "{redisService}.{methodName}: Error while checking the existence of a value in cache: {message}", nameof(RedisCacheService), nameof(ExistsAsync), e.Message);
+                _logger.LogError(e, LogMessages.RedisConnectionError, nameof(RedisCacheService), nameof(ExistsAsync), key);
+                return false;
+            }
+            catch (RedisTimeoutException e)
+            {
+                _logger.LogError(e, LogMessages.RedisTimeoutError, nameof(RedisCacheService), nameof(ExistsAsync), key);
+                return false;
+            }
+            catch (RedisException e)
+            {
+                _logger.LogError(e, LogMessages.RedisError, nameof(RedisCacheService), nameof(ExistsAsync), key);
+                return false;
+            }
+            catch (OperationCanceledException e)
+            {
+                _logger.LogWarning(e, LogMessages.OperationCancelledWarning, nameof(RedisCacheService), nameof(ExistsAsync), key);
                 return false;
             }
         }
@@ -36,40 +62,85 @@ namespace SportMap.DAL.Cache
                     return JsonConvert.DeserializeObject<T>(json);
                 }
             }
-            catch (Exception e)
+            catch (RedisConnectionException e)
             {
-                _logger.LogError(e, "{redisService}.{methodName}: Error while getting value to cache: {message}", nameof(RedisCacheService), nameof(GetAsync), e.Message);
-                return default;
+                _logger.LogError(e, LogMessages.RedisConnectionError, nameof(RedisCacheService), nameof(GetAsync), key);
+            }
+            catch (JsonSerializationException e)
+            {
+                _logger.LogError(e, LogMessages.JsonSerializationError, nameof(RedisCacheService), nameof(GetAsync), e.Message);
+            }
+            catch (RedisTimeoutException e)
+            {
+                _logger.LogError(e, LogMessages.RedisTimeoutError, nameof(RedisCacheService), nameof(GetAsync), key);
+            }
+            catch (RedisException e)
+            {
+                _logger.LogError(e, LogMessages.RedisError, nameof(RedisCacheService), nameof(GetAsync), key);
+            }
+            catch (OperationCanceledException e)
+            {
+                _logger.LogWarning(e, LogMessages.OperationCancelledWarning, nameof(RedisCacheService), nameof(GetAsync), key);
             }
 
             return default;
         }
 
-        public Task SetAsync<T>(string key, T value, TimeSpan ttl, CancellationToken cancellationToken = default)
+        public async Task<bool> SetAsync<T>(string key, T value, TimeSpan ttl, CancellationToken cancellationToken = default)
         {
             try
             {
                 var json = JsonConvert.SerializeObject(value);
-                return _database.StringSetAsync(key, json, ttl);
+                return await _database.StringSetAsync(key, json, ttl);
             }
-            catch (Exception e)
+            catch (RedisConnectionException e)
             {
-                _logger.LogError(e, "{redisService}.{methodName}: Error while setting value to cache: {key}", nameof(RedisCacheService), nameof(SetAsync), key);
-                return Task.FromException(e);
+                _logger.LogError(e, LogMessages.RedisConnectionError, nameof(RedisCacheService), nameof(SetAsync), key);
             }
+            catch (RedisTimeoutException e)
+            {
+                _logger.LogError(e, LogMessages.RedisTimeoutError, nameof(RedisCacheService), nameof(SetAsync), key);
+            }
+            catch (JsonSerializationException e)
+            {
+                _logger.LogError(e, LogMessages.JsonSerializationError, nameof(RedisCacheService), nameof(GetAsync), e.Message);
+            }
+            catch (RedisException e)
+            {
+                _logger.LogError(e, LogMessages.RedisError, nameof(RedisCacheService), nameof(SetAsync), key);
+            }
+            catch (OperationCanceledException e)
+            {
+                _logger.LogWarning(e, LogMessages.OperationCancelledWarning, nameof(RedisCacheService), nameof(SetAsync), key);
+            }
+
+            return false;
         }
 
-        public Task RemoveAsync(string key, CancellationToken cancellationToken = default)
+        public async Task<bool> RemoveAsync(string key, CancellationToken cancellationToken = default)
         {
             try
             {
-                return _database.KeyDeleteAsync(key);
+                return await _database.KeyDeleteAsync(key);
             }
-            catch (Exception e)
+            catch (RedisConnectionException e)
             {
-                _logger.LogError(e, "{redisService}.{methodName}: Error while removing value from cache: {key}", nameof(RedisCacheService), nameof(SetAsync), key);
-                return Task.FromException(e);
+                _logger.LogError(e, LogMessages.RedisConnectionError, nameof(RedisCacheService), nameof(RemoveAsync), key);
             }
+            catch (RedisTimeoutException e)
+            {
+                _logger.LogError(e, LogMessages.RedisTimeoutError, nameof(RedisCacheService), nameof(RemoveAsync), key);
+            }
+            catch (RedisException e)
+            {
+                _logger.LogError(e, LogMessages.RedisError, nameof(RedisCacheService), nameof(RemoveAsync), key);
+            }
+            catch (OperationCanceledException e)
+            {
+                _logger.LogWarning(e, LogMessages.OperationCancelledWarning, nameof(RedisCacheService), nameof(RemoveAsync), key);
+            }
+
+            return false;
         }
     }
 }

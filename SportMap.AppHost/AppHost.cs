@@ -2,7 +2,7 @@ var builder = DistributedApplication.CreateBuilder(args);
 
 builder.AddDockerComposeEnvironment("compose");
 
-var cache = builder.AddRedis("cache")
+var cache = builder.AddRedis("redis")
     .PublishAsDockerComposeService((resource, service) =>
     {
         service.Name = "cache";
@@ -18,7 +18,6 @@ var googleClientId = builder.AddParameter("google-client-id", secret: true);
 var googleClientSecret = builder.AddParameter("google-client-secret", secret: true);
 var googleRedirectUri = builder.AddParameter("google-redirect-uri");
 
-var cache = builder.AddRedis("redis");
 var pgDb = builder.AddPostgres("postgres", pgUsername, pgPassword)
     .WithDataVolume(isReadOnly: false)
     .WithHostPort(5432)

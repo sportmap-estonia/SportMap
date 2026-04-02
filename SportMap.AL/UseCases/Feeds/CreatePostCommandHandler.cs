@@ -1,10 +1,9 @@
-﻿using DomainLayer.Entities;
+﻿using DomainLayer.Entities.Enums;
 using Microsoft.Extensions.Logging;
 using SportMap.AL.Abstractions.Services;
 using SportMap.AL.Abstractions.UseCases;
 using SportMap.AL.DTOs;
 using SportMap.DAL.Abstractions;
-using static SportMap.AL.Helpers.Mapper;
 
 namespace SportMap.AL.UseCases.Feeds
 {
@@ -16,12 +15,17 @@ namespace SportMap.AL.UseCases.Feeds
             
             try
             {
-                var postData = Map<PostDTO, Post>(post);
+                var postData = post.Map();
                 var resultData = await unitOfWork.PostRepository.AddAsync(postData, cancellationToken);
                 await cache.SetAsync(resultData.Id.ToString(), resultData, TimeSpan.FromMinutes(20), cancellationToken);
 
                 return Result<PostDTO>
-                    .WithData(Map<Post, PostDTO>(resultData));
+                    .WithData(resultData.Map());
+            }
+            catch (OperationCanceledException oce)
+            {
+                logger.LogInformation(oce, "{class}.{method}: operation was canceled", nameof(CreatePostCommandHandler), nameof(Handle));
+                return Result<PostDTO>.WithError("Operation was canceled.");
             }
             catch (Exception e)
             {
