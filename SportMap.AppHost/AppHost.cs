@@ -2,7 +2,7 @@ var builder = DistributedApplication.CreateBuilder(args);
 
 builder.AddDockerComposeEnvironment("compose");
 
-var cache = builder.AddRedis("cache")
+var cache = builder.AddRedis("redis")
     .PublishAsDockerComposeService((resource, service) =>
     {
         service.Name = "cache";
@@ -20,6 +20,7 @@ var googleRedirectUri = builder.AddParameter("google-redirect-uri");
 
 var pgDb = builder.AddPostgres("postgres", pgUsername, pgPassword)
     .WithDataVolume(isReadOnly: false)
+    .WithHostPort(5432)
     .WithPgAdmin(pgAdmin => pgAdmin.WithHostPort(5050))
     .AddDatabase("sportmapdb");
 

@@ -1,5 +1,6 @@
 ﻿using DomainLayer.Entities;
 using Microsoft.EntityFrameworkCore;
+using SportMap.DAL.Extensions;
 
 namespace SportMap.DAL.DataContext
 {
@@ -11,9 +12,12 @@ namespace SportMap.DAL.DataContext
         public DbSet<UserRole> UserRoles => Set<UserRole>();
         public DbSet<PrivacyType> PrivacyTypes => Set<PrivacyType>();
         public DbSet<Personalization> Personalization => Set<Personalization>();
+        public DbSet<Post> Posts => Set<Post>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<User>(entity =>
             {
                 entity.HasIndex(user => user.GoogleId).IsUnique();
@@ -32,6 +36,11 @@ namespace SportMap.DAL.DataContext
                 entity.HasOne(personalization => personalization.BirthdatePrivacyType)
                       .WithMany()
                       .HasForeignKey(personalization => personalization.BirthdatePrivacyId);
+            });
+
+            modelBuilder.Entity<Post>(entity =>
+            {
+                entity.ConfigureBaseModelFields();
             });
         }
     }

@@ -3,7 +3,7 @@ using DomainLayer.Common;
 
 namespace DomainLayer.Entities
 {
-    public class User : BaseData
+    public class User : BaseEntity
     {
         public string GoogleId { get; set; } = string.Empty;
         public string UserName { get; set; } = string.Empty;

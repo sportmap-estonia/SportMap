@@ -7,9 +7,8 @@ using SportMap.DAL.DataContext;
 
 namespace SportMap.DAL.DataAccess
 {
-    public class UserRepository : BaseRepository<User>, IUserRepository
+    public class UserRepository(AppDbContext context, ILogger<UserRepository> logger) : BaseRepository<User>(context, logger, context.Users), IUserRepository
     {
-        public UserRepository(AppDbContext context, ILogger<UserRepository> logger) : base(context, logger) {}
         public async Task<User?> GetByGoogleIdAsync(string googleId, CancellationToken cancellationToken = default)
         {
             try

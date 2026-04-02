@@ -1,19 +1,22 @@
-﻿using SportMap.DAL.Abstractions;
+﻿using Microsoft.Extensions.Logging;
+using SportMap.DAL.Abstractions;
+using SportMap.DAL.Abstractions.Repositories;
 using SportMap.DAL.DataContext;
+using SportMap.DAL.Repositories;
 
 namespace SportMap.DAL.DataAccess
 {
-    public class UnitOfWork(AppDbContext dbContext) : IUnitOfWork
+    public class UnitOfWork(AppDbContext dbContext, IPostRepository postRepo, ILogger<UnitOfWork> logger) : IUnitOfWork
     {
-        private readonly AppDbContext _context = dbContext;
         private bool disposed = false;
 
         #region Repositories
+        public IPostRepository PostRepository => postRepo;
         #endregion
 
         public void Save()
         {
-            _context.SaveChanges();
+            dbContext.SaveChanges();
         }
 
         protected virtual void Dispose(bool disposing)
@@ -22,7 +25,7 @@ namespace SportMap.DAL.DataAccess
             {
                 if (disposing)
                 {
-                    _context.Dispose();
+                    dbContext.Dispose();
                 }
             }
             this.disposed = true;
