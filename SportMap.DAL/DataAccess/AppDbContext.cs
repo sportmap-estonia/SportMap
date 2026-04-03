@@ -50,6 +50,7 @@ namespace SportMap.DAL.DataContext
 
             modelBuilder.Entity<ImageData>(entity =>
             {
+                entity.ConfigureBaseModelFields();
                 entity.HasOne<User>()
                       .WithMany()
                       .HasForeignKey(img => img.UploaderId)

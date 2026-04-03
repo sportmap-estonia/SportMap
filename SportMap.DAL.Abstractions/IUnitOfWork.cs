@@ -4,8 +4,8 @@ namespace SportMap.DAL.Abstractions
 {
     public interface IUnitOfWork : IDisposable
     {
-        //TODO: Add interfaces there
         IPostRepository PostRepository { get; }
+        IImageRepository ImageRepository { get; }
         public void Save();
     }
 }
