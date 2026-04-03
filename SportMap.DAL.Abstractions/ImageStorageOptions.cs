@@ -1,4 +1,4 @@
-namespace SportMap.DAL.Common
+namespace SportMap.DAL.Abstractions
 {
     public class ImageStorageOptions
     {
