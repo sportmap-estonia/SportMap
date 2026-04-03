@@ -1,9 +1,13 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   reactCompiler: true,
   output: "standalone",
+  images: {
+    remotePatterns: [
+      { hostname: "**", pathname: "/api/images/**" },
+    ],
+  },
 };
 
 export default nextConfig;
