@@ -40,6 +40,13 @@ var server = builder.AddProject<Projects.SportMap_PL>("server")
     .PublishAsDockerComposeService((resource, service) =>
     {
         service.Name = "server";
+        service.AddVolume(new Aspire.Hosting.Docker.Resources.ServiceNodes.Volume
+        {
+            Name = "sportmap-images",
+            Type = "volume",
+            Source = "sportmap-images",
+            Target = "/data/images"
+        });
     });
 
 // #AddContainer(resourceName, imageName)

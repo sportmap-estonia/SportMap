@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SportMap.DAL.Abstractions;
 using SportMap.DAL.Abstractions.Repositories;
+using SportMap.DAL.Common;
 using SportMap.DAL.DataAccess;
 using SportMap.DAL.DataContext;
 using SportMap.DAL.Repositories;
@@ -20,6 +21,8 @@ namespace SportMap.DAL.Extensions
             serviceCollection.AddScoped<IUserRepository, UserRepository>();
             serviceCollection.AddScoped<IPostRepository, PostRepository>();
             serviceCollection.AddScoped<IImageRepository, ImageRepository>();
+            serviceCollection.AddScoped<IImageStorageService, ImageStorageService>();
+            serviceCollection.Configure<ImageStorageOptions>(configuration.GetSection("ImageStorage"));
         }
     }
 }
