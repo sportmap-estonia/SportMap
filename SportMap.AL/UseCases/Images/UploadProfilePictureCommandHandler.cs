@@ -54,7 +54,7 @@ namespace SportMap.AL.UseCases.Images
                         string.Format(ResultConstants.InvalidMimeType, command.FileName));
 
                 var imageId = Guid.NewGuid();
-                var path = Path.Combine(options.Value.BasePath, imageId.ToString());
+                var path = Path.Join(options.Value.BasePath, imageId.ToString());
 
                 try
                 {
