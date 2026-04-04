@@ -12,7 +12,7 @@ const tabs: {
   label: string;
   href: string;
 }[] = [
-  { id: "map", icon: Map, label: "Map", href: "/" },
+  { id: "map", icon: Map, label: "Map", href: "/map" },
   { id: "feed", icon: LayoutGrid, label: "Feed", href: "/feed" },
   { id: "events", icon: Calendar, label: "Events", href: "/events" },
   { id: "profile", icon: User, label: "Profile", href: "/profile" },
@@ -24,7 +24,7 @@ export default function BottomNav() {
   return (
     <div className="fixed bottom-0 left-0 right-0 h-20 bg-[#0a0a0f]/90 backdrop-blur-xl border-t border-white/10 flex items-center justify-around px-4 z-40 md:hidden">
       {tabs.map((tab) => {
-        const isActive = pathname === tab.href || (tab.id === "map" && pathname === "/");
+        const isActive = pathname === tab.href;
         return (
           <Link href={tab.href} key={tab.id} className="flex-1 flex justify-center">
             <Button
