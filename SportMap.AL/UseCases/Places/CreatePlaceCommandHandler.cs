@@ -1,0 +1,68 @@
+using DomainLayer.Entities;
+using Microsoft.Extensions.Logging;
+using SportMap.AL.Abstractions.UseCases;
+using SportMap.AL.DTOs;
+using SportMap.DAL.Abstractions;
+
+namespace SportMap.AL.UseCases.Places
+{
+    public class CreatePlaceCommandHandler(IUnitOfWork unitOfWork, ILogger<CreatePlaceCommandHandler> logger) : ICommandHandler<CreatePlaceCommand, PlaceDto>
+    {
+        public async Task<Result<PlaceDto>> Handle(CreatePlaceCommand command, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var place = new Place
+                {
+                    Id = Guid.NewGuid(),
+                    Name = command.Name,
+                    Description = command.Description,
+                    PlaceTypeId = command.PlaceTypeId,
+                    Latitude = command.Latitude,
+                    Longitude = command.Longitude,
+                    Address = command.Address,
+                    CreatorId = command.CreatorId,
+                    Status = PlaceStatus.Approved
+                };
+
+                var resultData = await unitOfWork.PlaceRepository.AddAsync(place, cancellationToken);
+
+                return Result<PlaceDto>.WithData(new PlaceDto(
+                    resultData.Id,
+                    resultData.Name,
+                    resultData.Description,
+                    resultData.PlaceTypeId,
+                    resultData.Latitude,
+                    resultData.Longitude,
+                    resultData.Address,
+                    resultData.ImageId,
+                    resultData.CreatorId,
+                    string.Empty,
+                    resultData.CreatedAt,
+                    resultData.ModifiedAt,
+                    resultData.Status
+                ));
+            }
+            catch (OperationCanceledException oce)
+            {
+                logger.LogInformation(oce, "{class}.{method}: operation was canceled", nameof(CreatePlaceCommandHandler), nameof(Handle));
+                return Result<PlaceDto>.WithError("Operation was canceled.");
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e, "{class}.{method}: {message}", nameof(CreatePlaceCommandHandler), nameof(Handle), e.Message);
+                return Result<PlaceDto>.WithError(e.Message);
+            }
+        }
+    }
+
+    public record CreatePlaceCommand(
+        string Name,
+        string Description,
+        Guid PlaceTypeId,
+        double Latitude,
+        double Longitude,
+        string? Address,
+        Guid CreatorId
+    ) : ICommand<PlaceDto>;
+}

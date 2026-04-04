@@ -2,7 +2,7 @@ using DomainLayer.Common;
 
 namespace DomainLayer.Entities
 {
-    public class Place : BaseData
+    public class Place : BaseEntity
     {
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;

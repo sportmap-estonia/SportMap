@@ -2,7 +2,7 @@ using DomainLayer.Common;
 
 namespace DomainLayer.Entities
 {
-    public class Image : BaseData
+    public class Image : BaseEntity
     {
         public string Name { get; set; } = string.Empty;
         public string FileName { get; set; } = string.Empty;
