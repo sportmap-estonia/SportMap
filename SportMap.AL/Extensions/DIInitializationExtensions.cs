@@ -2,6 +2,7 @@
 using SportMap.AL.Abstractions.Services;
 using SportMap.AL.UseCases.Feeds;
 using SportMap.AL.UseCases.Images;
+using SportMap.AL.UseCases.Users;
 using SportMap.DAL.Cache;
 using SportMap.AL.Abstractions.Services;
 using SportMap.AL.Common;
@@ -26,6 +27,10 @@ namespace SportMap.Al.Extensions
             serviceCollection.AddTransient<UploadProfilePictureCommandHandler>();
             serviceCollection.AddTransient<RemoveProfilePictureCommandHandler>();
             serviceCollection.AddTransient<GetOwnProfilePictureQueryHandler>();
+            serviceCollection.AddTransient<GetProfilePictureByUsernameQueryHandler>();
+
+            // Users
+            serviceCollection.AddTransient<GetCurrentUserInfoQueryHandler>();
         }
     }
 }

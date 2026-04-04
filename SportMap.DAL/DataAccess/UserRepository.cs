@@ -21,5 +21,18 @@ namespace SportMap.DAL.DataAccess
                 throw;
             }
         }
+
+        public async Task<User?> GetByUserNameAsync(string username, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                return await _dbSet.FirstOrDefaultAsync(user => user.UserName == username, cancellationToken);
+            }
+            catch (Exception exception)
+            {
+                _logger.LogError(exception, $"{nameof(UserRepository)}.{nameof(GetByUserNameAsync)}");
+                throw;
+            }
+        }
     }
 }

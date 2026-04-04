@@ -14,6 +14,7 @@ namespace SportMap.PL.Controllers
         UploadProfilePictureCommandHandler uploadHandler,
         RemoveProfilePictureCommandHandler removeHandler,
         GetOwnProfilePictureQueryHandler getHandler,
+        GetProfilePictureByUsernameQueryHandler getUsernameHandler,
         ILogger<ProfilePictureController> logger) : ControllerBase
     {
         [HttpPost]
@@ -55,25 +56,26 @@ namespace SportMap.PL.Controllers
             return StatusCode(500);
         }
 
-        [HttpGet("{userId:guid}")]
-        public async Task<IActionResult> GetForUser(Guid userId, CancellationToken cancellationToken)
+        [HttpGet("{username}")]
+        public async Task<IActionResult> GetByUsername(string username, CancellationToken cancellationToken)
         {
-            AL.Abstractions.UseCases.Result<AL.Abstractions.Dtos.UploadImageResponseDto> result;
+            AL.Abstractions.UseCases.Result<AL.Abstractions.Dtos.UserProfilePictureDto> result;
             try
             {
-                result = await getHandler.Handle(new GetOwnProfilePictureQuery(userId), cancellationToken);
+                result = await getUsernameHandler.Handle(
+                    new GetProfilePictureByUsernameQuery(username), cancellationToken);
             }
             catch (Exception e)
             {
                 logger.LogError(e, "{class}.{method}: Unhandled exception: {msg}",
-                    nameof(ProfilePictureController), nameof(GetForUser), e.Message);
+                    nameof(ProfilePictureController), nameof(GetByUsername), e.Message);
                 return StatusCode(500);
             }
 
-            if (!result.HasError)
-                return Ok(new { profilePictureId = result.Data!.Id.ToString() });
+            if (result.HasError)
+                return NotFound();
 
-            return NotFound();
+            return Ok(new { profilePictureId = result.Data!.ProfilePictureId?.ToString() });
         }
 
         [HttpGet]

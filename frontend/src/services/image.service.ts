@@ -5,12 +5,14 @@ import type { Result } from "@/lib/result";
 export class ImageService extends BaseService<BaseData> {
   protected readonly endpoint = "profile-picture";
 
-  async getProfilePictureIdForUser(userId: string): Promise<string | null> {
+  async getProfilePictureByUsername(
+    username: string
+  ): Promise<string | null | "NOT_FOUND"> {
     try {
-      const response = await fetch(`${this.baseUrl}/${this.endpoint}/${userId}`);
-      if (response.status === 404) return null;
+      const response = await fetch(`${this.baseUrl}/${this.endpoint}/${username}`);
+      if (response.status === 404) return "NOT_FOUND";
       if (!response.ok) return null;
-      const data = (await response.json()) as { profilePictureId?: string };
+      const data = (await response.json()) as { profilePictureId?: string | null };
       return data.profilePictureId ?? null;
     } catch {
       return null;

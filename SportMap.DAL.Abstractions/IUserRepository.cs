@@ -5,5 +5,6 @@ namespace SportMap.DAL.Abstractions
     public interface IUserRepository : IRepository<User>
     {
         Task<User?> GetByGoogleIdAsync(string googleId, CancellationToken cancellationToken = default);
+        Task<User?> GetByUserNameAsync(string username, CancellationToken cancellationToken = default);
     }
 }
