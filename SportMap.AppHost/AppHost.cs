@@ -49,16 +49,10 @@ var server = builder.AddProject<Projects.SportMap_PL>("server")
         });
     });
 
-// #AddContainer(resourceName, imageName)
-builder.AddContainer("webfrontend", "webfrontend")
-    .WithDockerfile("../frontend")
-    .WithHttpEndpoint(port: 3000, targetPort: 3000, env: "PORT")
+builder.AddExecutable("webfrontend", "pnpm", "../frontend", "run", "dev")
+    .WithHttpEndpoint(port: 3000, env: "PORT")
     .WithReference(server)
     .WaitFor(server)
-    .WithExternalHttpEndpoints()
-    .PublishAsDockerComposeService((resource, service) =>
-    {
-        service.Name = "webfrontend";
-    });
+    .WithExternalHttpEndpoints();
 
 builder.Build().Run();

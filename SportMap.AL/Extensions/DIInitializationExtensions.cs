@@ -25,6 +25,7 @@ namespace SportMap.Al.Extensions
             serviceCollection.AddTransient<GetImageQueryHandler>();
             serviceCollection.AddTransient<UploadProfilePictureCommandHandler>();
             serviceCollection.AddTransient<RemoveProfilePictureCommandHandler>();
+            serviceCollection.AddTransient<GetOwnProfilePictureQueryHandler>();
         }
     }
 }

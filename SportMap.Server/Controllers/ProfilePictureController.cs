@@ -13,6 +13,7 @@ namespace SportMap.PL.Controllers
     public class ProfilePictureController(
         UploadProfilePictureCommandHandler uploadHandler,
         RemoveProfilePictureCommandHandler removeHandler,
+        GetOwnProfilePictureQueryHandler getHandler,
         ILogger<ProfilePictureController> logger) : ControllerBase
     {
         [HttpPost]
@@ -52,6 +53,57 @@ namespace SportMap.PL.Controllers
                 return StatusCode(503);
 
             return StatusCode(500);
+        }
+
+        [HttpGet("{userId:guid}")]
+        public async Task<IActionResult> GetForUser(Guid userId, CancellationToken cancellationToken)
+        {
+            AL.Abstractions.UseCases.Result<AL.Abstractions.Dtos.UploadImageResponseDto> result;
+            try
+            {
+                result = await getHandler.Handle(new GetOwnProfilePictureQuery(userId), cancellationToken);
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e, "{class}.{method}: Unhandled exception: {msg}",
+                    nameof(ProfilePictureController), nameof(GetForUser), e.Message);
+                return StatusCode(500);
+            }
+
+            if (!result.HasError)
+                return Ok(new { profilePictureId = result.Data!.Id.ToString() });
+
+            return NotFound();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Get(CancellationToken cancellationToken)
+        {
+            var subClaim = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value
+                           ?? User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (subClaim is null || !Guid.TryParse(subClaim, out var userId))
+            {
+                logger.LogWarning("{class}.{method}: Missing or invalid sub claim",
+                    nameof(ProfilePictureController), nameof(Get));
+                return Unauthorized();
+            }
+
+            AL.Abstractions.UseCases.Result<AL.Abstractions.Dtos.UploadImageResponseDto> result;
+            try
+            {
+                result = await getHandler.Handle(new GetOwnProfilePictureQuery(userId), cancellationToken);
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e, "{class}.{method}: Unhandled exception: {msg}",
+                    nameof(ProfilePictureController), nameof(Get), e.Message);
+                return StatusCode(500);
+            }
+
+            if (!result.HasError)
+                return Ok(new { profilePictureId = result.Data!.Id.ToString() });
+
+            return NotFound();
         }
 
         [HttpDelete]

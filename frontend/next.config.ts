@@ -10,13 +10,13 @@ const nextConfig: NextConfig = {
   },
   async rewrites() {
     const backendUrl =
-      process.env.services__server__https__0 ??
       process.env.services__server__http__0 ??
-      "http://localhost:5000";
+      process.env.services__server__https__0 ??
+      "http://localhost:5565";
     return [
       {
         source: "/api/:path*",
-        destination: `${backendUrl}/:path*`,
+        destination: `${backendUrl}/api/:path*`,
       },
     ];
   },
