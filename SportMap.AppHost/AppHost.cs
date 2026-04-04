@@ -49,10 +49,25 @@ var server = builder.AddProject<Projects.SportMap_PL>("server")
         });
     });
 
-builder.AddExecutable("webfrontend", "pnpm", "../frontend", "run", "dev")
-    .WithHttpEndpoint(port: 3000, env: "PORT")
-    .WithReference(server)
-    .WaitFor(server)
-    .WithExternalHttpEndpoints();
+if (builder.ExecutionContext.IsPublishMode)
+{
+    builder.AddDockerfile("webfrontend", "../frontend")
+        .WithHttpEndpoint(port: 3000, env: "PORT")
+        .WithReference(server)
+        .WaitFor(server)
+        .WithExternalHttpEndpoints()
+        .PublishAsDockerComposeService((resource, service) =>
+        {
+            service.Name = "webfrontend";
+        });
+}
+else
+{
+    builder.AddExecutable("webfrontend", "pnpm", "../frontend", "run", "dev")
+        .WithHttpEndpoint(port: 3000, env: "PORT")
+        .WithReference(server)
+        .WaitFor(server)
+        .WithExternalHttpEndpoints();
+}
 
 builder.Build().Run();
