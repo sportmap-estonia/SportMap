@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SportMap.AL.Abstractions.Services;
 using SportMap.DAL.Abstractions;
 using SportMap.DAL.Abstractions.Repositories;
 using SportMap.DAL.Common;

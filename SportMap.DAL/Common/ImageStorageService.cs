@@ -1,5 +1,5 @@
 using Microsoft.Extensions.Logging;
-using SportMap.DAL.Abstractions;
+using SportMap.AL.Abstractions.Services;
 
 namespace SportMap.DAL.Common
 {
