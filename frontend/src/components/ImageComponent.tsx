@@ -97,6 +97,7 @@ export default function ImageComponent({
       ) : (
         <Image
           src={`/api/images/${imageId}`}
+          unoptimized={process.env.ENVIRONMENT !== "PRODUCTION"}
           alt={alt}
           width={dimensions.width}
           height={dimensions.height}
