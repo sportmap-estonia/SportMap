@@ -1,0 +1,11 @@
+$kind: collection
+name: SportMap API
+variables:
+  - key: baseUrl
+    value: 'http://localhost:5565'
+  - key: accessToken
+    value: ''
+  - key: postId
+    value: ''
+  - key: placeId
+    value: ''
