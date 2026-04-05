@@ -1,4 +1,4 @@
-﻿using DomainLayer.Common;
+using DomainLayer.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SportMap.DAL.Abstractions;
@@ -7,31 +7,29 @@ using System.Linq.Expressions;
 
 namespace SportMap.DAL.Common
 {
-    public abstract class BaseRepository<TData> : IRepository<TData> where TData : BaseData
+    public abstract class BaseRepository<TData>(AppDbContext context, ILogger logger, DbSet<TData> dbSet) : IRepository<TData>
+        where TData : BaseEntity
     {
-        private readonly AppDbContext _context;
-        protected readonly ILogger _logger;
-        protected readonly DbSet<TData> _dbSet;
-
-        protected BaseRepository(AppDbContext context, ILogger logger)
-        {
-            _context = context;
-            _logger = logger;
-            _dbSet = context.Set<TData>();
-        }
+        private readonly AppDbContext _context = context;
+        protected readonly ILogger _logger = logger;
+        protected readonly DbSet<TData> _dbSet = dbSet;
 
         public async Task<TData?> GetByIdAsync(Guid id, CancellationToken ct = default)
         {
             try
             {
-                var entity = await _dbSet.FindAsync(new[] { id }, ct).ConfigureAwait(false);
+                var entity = await _dbSet.FindAsync(new object[] { id }, ct).ConfigureAwait(false);
+
                 if (entity is null)
-                    _logger.LogInformation($"{nameof(BaseRepository<TData>)}.{nameof(GetByIdAsync)}: Entity was not found");
+                {
+                    logger.LogInformation($"{nameof(BaseRepository<TData>)}.{nameof(GetByIdAsync)}: Entity was not found");
+                }
+
                 return entity;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"{nameof(BaseRepository<TData>)}.{nameof(GetByIdAsync)}");
+                logger.LogError(ex, $"{nameof(BaseRepository<TData>)}.{nameof(GetByIdAsync)}");
                 throw;
             }
         }
@@ -45,7 +43,7 @@ namespace SportMap.DAL.Common
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"{nameof(BaseRepository<TData>)}.{nameof(GetAllAsync)}");
+                logger.LogError(ex, $"{nameof(BaseRepository<TData>)}.{nameof(GetAllAsync)}");
                 throw;
             }
         }
@@ -59,7 +57,7 @@ namespace SportMap.DAL.Common
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"{nameof(BaseRepository<TData>)}.{nameof(FindAsync)}");
+                logger.LogError(ex, $"{nameof(BaseRepository<TData>)}.{nameof(FindAsync)}");
                 throw;
             }
         }
@@ -69,12 +67,13 @@ namespace SportMap.DAL.Common
             try
             {
                 await _dbSet.AddAsync(entity, ct);
-                await _context.SaveChangesAsync(ct);
+                await context.SaveChangesAsync(ct);
+
                 return entity;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"{nameof(BaseRepository<TData>)}.{nameof(AddAsync)}");
+                logger.LogError(ex, $"{nameof(BaseRepository<TData>)}.{nameof(AddAsync)}");
                 throw;
             }
         }
@@ -84,11 +83,11 @@ namespace SportMap.DAL.Common
             try
             {
                 await _dbSet.AddRangeAsync(entities, ct);
-                await _context.SaveChangesAsync(ct);
+                await context.SaveChangesAsync(ct);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"{nameof(BaseRepository<TData>)}.{nameof(AddRangeAsync)}");
+                logger.LogError(ex, $"{nameof(BaseRepository<TData>)}.{nameof(AddRangeAsync)}");
                 throw;
             }
         }
@@ -98,11 +97,11 @@ namespace SportMap.DAL.Common
             try
             {
                 _dbSet.Update(entity);
-                await _context.SaveChangesAsync(ct);
+                await context.SaveChangesAsync(ct);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"{nameof(BaseRepository<TData>)}.{nameof(Update)}");
+                logger.LogError(ex, $"{nameof(BaseRepository<TData>)}.{nameof(Update)}");
                 throw;
             }
         }
@@ -112,11 +111,11 @@ namespace SportMap.DAL.Common
             try
             {
                 _dbSet.Remove(entity);
-                await _context.SaveChangesAsync(ct);
+                await context.SaveChangesAsync(ct);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"{nameof(BaseRepository<TData>)}.{nameof(Remove)}");
+                logger.LogError(ex, $"{nameof(BaseRepository<TData>)}.{nameof(Remove)}");
                 throw;
             }
         }
@@ -126,11 +125,11 @@ namespace SportMap.DAL.Common
             try
             {
                 _dbSet.RemoveRange(entities);
-                await _context.SaveChangesAsync(ct);
+                await context.SaveChangesAsync(ct);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"{nameof(BaseRepository<TData>)}.{nameof(RemoveRange)}");
+                logger.LogError(ex, $"{nameof(BaseRepository<TData>)}.{nameof(RemoveRange)}");
                 throw;
             }
         }

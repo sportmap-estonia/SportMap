@@ -1,8 +1,14 @@
-﻿namespace SportMap.DAL.Abstractions
+using SportMap.DAL.Abstractions.Repositories;
+
+namespace SportMap.DAL.Abstractions
 {
     public interface IUnitOfWork : IDisposable
     {
-        //TODO: Add interfaces there
-        public void Save();
+        IPostRepository PostRepository { get; }
+        IImageRepository ImageRepository { get; }
+        IUserRepository UserRepository { get; }
+        IPersonalizationRepository PersonalizationRepository { get; }
+        IPrivacyTypeRepository PrivacyTypeRepository { get; }
+        void Save();
     }
 }

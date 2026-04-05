@@ -1,0 +1,8 @@
+$kind: http-request
+name: Google Login
+method: GET
+url: '{{baseUrl}}/api/auth/login/google'
+order: 1000
+auth:
+  type: noauth
+description: Initiates Google OAuth2 login flow. Redirects to Google's authentication page.

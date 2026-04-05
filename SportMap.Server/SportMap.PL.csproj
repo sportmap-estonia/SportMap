@@ -27,10 +27,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\SportMap.AL.Abstractions\SportMap.AL.Abstractions.csproj" />
     <ProjectReference Include="..\SportMap.AL\SportMap.AL.csproj" />
   </ItemGroup>

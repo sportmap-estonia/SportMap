@@ -22,6 +22,9 @@ This project uses PostgreSQL with credentials stored securely via .NET User Secr
 ```bash
    dotnet user-secrets set "Parameters:postgres-username" "your_username"
    dotnet user-secrets set "Parameters:postgres-password" "your_secure_password"
+   dotnet user-secrets set "Parameters:postgres-host" "localhost"
+   dotnet user-secrets set "Parameters:postgres-port" "5432"
+   dotnet user-secrets set "Parameters:postgres-database" "sportmapdb"
 ```
 
 3. **Set JWT and Google credentials for authentication**:

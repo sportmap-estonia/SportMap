@@ -1,0 +1,18 @@
+$kind: http-request
+name: Create Post
+method: POST
+url: '{{baseUrl}}/api/feed'
+order: 3000
+auth:
+  type: noauth
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "title": "My Post Title",
+      "content": "My post content goes here."
+    }
+description: Creates a new post. Title and content are required.

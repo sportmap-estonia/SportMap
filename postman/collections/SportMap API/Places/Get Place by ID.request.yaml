@@ -1,0 +1,11 @@
+$kind: http-request
+name: Get Place by ID
+method: GET
+url: '{{baseUrl}}/api/places/{{placeId}}'
+order: 2000
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{accessToken}}'
+description: Returns a single approved place by its GUID.
