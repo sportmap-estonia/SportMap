@@ -186,10 +186,6 @@ namespace SportMap.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("IconName")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<DateTime?>("ModifiedAt")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("timestamp with time zone");

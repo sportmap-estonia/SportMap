@@ -4,5 +4,5 @@ using SportMap.AL.DTOs;
 
 namespace SportMap.AL.UseCases.Places
 {
-    public record GetPlaceQuery(Guid? Id, PlaceStatus Status) : IQuery<IReadOnlyList<PlaceDto>>;
+    public record GetPlaceQuery(Guid? Id, PlaceStatus Status, Guid? PlaceTypeId) : IQuery<IReadOnlyList<PlaceDto>>;
 }

@@ -24,10 +24,11 @@ namespace SportMap.AL.UseCases.Places
                     return Result<IReadOnlyList<PlaceDto>>.WithData(place.AsReadonlyList());
                 }
 
-                var placeData = await unitOfWork.PlaceRepository.GetAllAsync(cancellationToken);
+                var placeData = await unitOfWork.PlaceRepository.GetAllAsync(cancellationToken, place => place.PlaceType);
                 var filteredPlaces = placeData
                     .Where(place => place.Status.Equals(query.Status))
-                    .FilterIfNotNull(query.Id, (place, id) => place.Id == id);
+                    .FilterIfNotNull(query.Id, (place, id) => place.Id == id)
+                    .FilterIfNotNull(query.PlaceTypeId, (place, ptId) => place.PlaceTypeId == ptId);
 
                 places = filteredPlaces
                     .Select(place => new PlaceDto(
@@ -40,11 +41,19 @@ namespace SportMap.AL.UseCases.Places
                         place.Address,
                         place.ImageId,
                         place.CreatorId,
-                        place.Creator != null ? $"{place.Creator.FirstName} {place.Creator.LastName}" : string.Empty,
+                        string.Empty, // TODO: Include CreatorName when creator relationship is fixed
                         place.CreatedAt,
                         place.ModifiedAt,
                         place.Status
-                    ))
+                    )
+                    {
+                        PlaceType = place.PlaceType != null ? new PlaceTypeDto
+                        {
+                            Id = place.PlaceType.Id,
+                            Name = place.PlaceType.Name,
+                            Description = place.PlaceType.Description
+                        } : null
+                    })
                     .ToList()
                     .AsReadOnly();
             }

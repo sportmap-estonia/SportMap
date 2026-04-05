@@ -17,13 +17,13 @@ namespace SportMap.PL.Controllers
     {
         // GET: api/places
         [HttpGet]
-        public async Task<Results<InternalServerError, NotFound, Ok<IReadOnlyList<PlaceDto>>>> Get()
+        public async Task<Results<InternalServerError, NotFound, Ok<IReadOnlyList<PlaceDto>>>> Get([FromQuery] Guid? placeTypeId)
         {
             AL.Abstractions.UseCases.Result<IReadOnlyList<PlaceDto>>? result;
 
             try
             {
-                var query = new GetPlaceQuery(null, PlaceStatus.Approved);
+                var query = new GetPlaceQuery(null, PlaceStatus.Approved, placeTypeId);
                 result = await getPlaces.Handle(query, CancellationToken.None);
             }
             catch (Exception e)
@@ -57,7 +57,7 @@ namespace SportMap.PL.Controllers
 
             try
             {
-                var query = new GetPlaceQuery(id, PlaceStatus.Approved);
+                var query = new GetPlaceQuery(id, PlaceStatus.Approved, null);
                 result = await getPlaces.Handle(query, CancellationToken.None);
             }
             catch (Exception e)

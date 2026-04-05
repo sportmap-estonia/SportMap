@@ -6,6 +6,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import PlaceDetailSheet, { Place } from './PlaceDetailSheet';
 import { RecenterButton } from './navigation/RecenterButton';
 import { placeService, type PlaceDto } from '@/services/place.service';
+import type { PlaceTypeDto } from '@/types/place';
 
 const TALLINN_CENTER: [number, number] = [24.7421, 59.4379];
 
@@ -34,9 +35,12 @@ function mapToPlace(dto: PlaceDto): Place {
 export default function MapView() {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<mapboxgl.Map | null>(null);
+  const markersRef = useRef<mapboxgl.Marker[]>([]);
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   const [places, setPlaces] = useState<Place[]>([]);
   const [loading, setLoading] = useState(true);
+  const [placeTypes, setPlaceTypes] = useState<PlaceTypeDto[]>([]);
+  const [selectedPlaceTypeId, setSelectedPlaceTypeId] = useState<string | null>(null);
 
   const handleReport = () => {
     alert('Report functionality would be implemented here');
@@ -80,7 +84,7 @@ export default function MapView() {
   useEffect(() => {
     async function fetchPlaces() {
       try {
-        const result = await placeService.getAll();
+        const result = await placeService.getAll(selectedPlaceTypeId ? { placeTypeId: selectedPlaceTypeId } : undefined);
         if (result.isSucceed && result.value) {
           setPlaces(result.value.map(mapToPlace));
         }
@@ -91,6 +95,22 @@ export default function MapView() {
       }
     }
     fetchPlaces();
+  }, [selectedPlaceTypeId]);
+
+  // Fetch place types
+  useEffect(() => {
+    async function fetchPlaceTypes() {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/place-types`);
+        if (response.ok) {
+          const data = await response.json();
+          setPlaceTypes(data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch place types:', error);
+      }
+    }
+    fetchPlaceTypes();
   }, []);
 
   useEffect(() => {
@@ -167,6 +187,11 @@ export default function MapView() {
     const addMarkers = () => {
       const map = mapInstanceRef.current;
       if (!map) return;
+
+      // Clear existing markers
+      markersRef.current.forEach(marker => marker.remove());
+      markersRef.current = [];
+
       if (places.length === 0) return;
 
       places.forEach((place) => {
@@ -189,9 +214,11 @@ export default function MapView() {
         });
 
         // Add marker to map
-        new mapboxgl.Marker(el)
+        const marker = new mapboxgl.Marker(el)
           .setLngLat([place.location.lng, place.location.lat])
           .addTo(map);
+        
+        markersRef.current.push(marker);
       });
     };
 
@@ -231,6 +258,34 @@ export default function MapView() {
           height: 36px !important;
         }
       `}</style>
+      
+      {/* Place Type Filter */}
+      <div className="absolute top-4 left-4 z-30 flex flex-wrap gap-2">
+        <button
+          onClick={() => setSelectedPlaceTypeId(null)}
+          className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+            selectedPlaceTypeId === null
+              ? 'bg-white text-gray-900'
+              : 'bg-gray-800/80 text-white hover:bg-gray-700'
+          }`}
+        >
+          All
+        </button>
+        {placeTypes.map((type) => (
+          <button
+            key={type.id}
+            onClick={() => setSelectedPlaceTypeId(type.id)}
+            className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+              selectedPlaceTypeId === type.id
+                ? 'bg-white text-gray-900'
+                : 'bg-gray-800/80 text-white hover:bg-gray-700'
+            }`}
+          >
+            {type.name}
+          </button>
+        ))}
+      </div>
+
       <div ref={mapRef} className="w-full h-full" />
       <div className="absolute top-4 right-4 z-30">
         <RecenterButton onClick={handleRecenter} />
