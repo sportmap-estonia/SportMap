@@ -37,11 +37,13 @@ export default function MapView() {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<mapboxgl.Map | null>(null);
   const markersRef = useRef<mapboxgl.Marker[]>([]);
+  const userLocationMarkerRef = useRef<mapboxgl.Marker | null>(null);
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   const [places, setPlaces] = useState<Place[]>([]);
   const [loading, setLoading] = useState(true);
   const [placeTypes, setPlaceTypes] = useState<PlaceTypeDto[]>([]);
   const [selectedPlaceTypeId, setSelectedPlaceTypeId] = useState<string | null>(null);
+  const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
 
   const handleReport = () => {
     alert('Report functionality would be implemented here');
@@ -51,10 +53,18 @@ export default function MapView() {
     const map = mapInstanceRef.current;
     if (!map) return;
 
-    if ('geolocation' in navigator) {
+    // Use stored user location or get fresh one
+    if (userLocation) {
+      map.flyTo({
+        center: userLocation,
+        zoom: 14,
+        essential: true
+      });
+    } else if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition(
         (pos) => {
           const newCenter: [number, number] = [pos.coords.longitude, pos.coords.latitude];
+          setUserLocation(newCenter);
           map.flyTo({
             center: newCenter,
             zoom: 14,
@@ -137,6 +147,21 @@ export default function MapView() {
     fetchPlaceTypes();
   }, []);
 
+  // Get user location on mount
+  useEffect(() => {
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const location: [number, number] = [pos.coords.longitude, pos.coords.latitude];
+          setUserLocation(location);
+        },
+        (err) => {
+          console.warn('Unable to get user location:', err);
+        }
+      );
+    }
+  }, []);
+
   useEffect(() => {
     if (!mapRef.current) return;
 
@@ -161,6 +186,7 @@ export default function MapView() {
           navigator.geolocation.getCurrentPosition(
             (pos) => {
               center = [pos.coords.longitude, pos.coords.latitude] as [number, number];
+              setUserLocation(center);
               resolve();
             },
             (err) => {
@@ -205,6 +231,41 @@ export default function MapView() {
       }
     };
   }, []);
+
+  // Add user location marker when location changes
+  useEffect(() => {
+    const map = mapInstanceRef.current;
+    if (!map || !userLocation) return;
+
+    // Remove existing user location marker
+    if (userLocationMarkerRef.current) {
+      userLocationMarkerRef.current.remove();
+    }
+
+    // Create user location marker element
+    const el = document.createElement('div');
+    el.className = 'user-location-marker';
+    el.style.width = '20px';
+    el.style.height = '20px';
+    el.style.backgroundColor = '#3b82f6';
+    el.style.borderRadius = '50%';
+    el.style.border = '3px solid #fff';
+    el.style.boxShadow = '0 0 0 4px rgba(59, 130, 246, 0.3), 0 0 10px rgba(0,0,0,0.3)';
+
+    // Add to map
+    const marker = new mapboxgl.Marker(el)
+      .setLngLat(userLocation)
+      .addTo(map);
+    
+    userLocationMarkerRef.current = marker;
+
+    return () => {
+      if (userLocationMarkerRef.current) {
+        userLocationMarkerRef.current.remove();
+        userLocationMarkerRef.current = null;
+      }
+    };
+  }, [userLocation]);
 
   // Add markers when places change
   useEffect(() => {
