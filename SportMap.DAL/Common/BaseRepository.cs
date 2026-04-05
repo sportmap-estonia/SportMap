@@ -18,7 +18,7 @@ namespace SportMap.DAL.Common
         {
             try
             {
-                var entity = await _dbSet.FindAsync(new[] { id }, ct).ConfigureAwait(false);
+                var entity = await _dbSet.FindAsync(new object[] { id }, ct).ConfigureAwait(false);
 
                 if (entity is null)
                 {

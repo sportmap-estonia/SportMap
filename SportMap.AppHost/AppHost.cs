@@ -40,18 +40,34 @@ var server = builder.AddProject<Projects.SportMap_PL>("server")
     .PublishAsDockerComposeService((resource, service) =>
     {
         service.Name = "server";
+        service.AddVolume(new Aspire.Hosting.Docker.Resources.ServiceNodes.Volume
+        {
+            Name = "sportmap-images",
+            Type = "volume",
+            Source = "sportmap-images",
+            Target = "/data/images"
+        });
     });
 
-// #AddContainer(resourceName, imageName)
-builder.AddContainer("webfrontend", "webfrontend")
-    .WithDockerfile("../frontend")
-    .WithHttpEndpoint(port: 3000, targetPort: 3000, env: "PORT")
-    .WithReference(server)
-    .WaitFor(server)
-    .WithExternalHttpEndpoints()
-    .PublishAsDockerComposeService((resource, service) =>
-    {
-        service.Name = "webfrontend";
-    });
+if (builder.ExecutionContext.IsPublishMode)
+{
+    builder.AddDockerfile("webfrontend", "../frontend")
+        .WithHttpEndpoint(port: 3000, env: "PORT")
+        .WithReference(server)
+        .WaitFor(server)
+        .WithExternalHttpEndpoints()
+        .PublishAsDockerComposeService((resource, service) =>
+        {
+            service.Name = "webfrontend";
+        });
+}
+else
+{
+    builder.AddExecutable("webfrontend", "pnpm", "../frontend", "run", "dev")
+        .WithHttpEndpoint(port: 3000, env: "PORT")
+        .WithReference(server)
+        .WaitFor(server)
+        .WithExternalHttpEndpoints();
+}
 
 builder.Build().Run();

@@ -1,4 +1,4 @@
-﻿using DomainLayer.Entities;
+using DomainLayer.Entities;
 using Microsoft.EntityFrameworkCore;
 using SportMap.DAL.Extensions;
 
@@ -13,6 +13,7 @@ namespace SportMap.DAL.DataContext
         public DbSet<PrivacyType> PrivacyTypes => Set<PrivacyType>();
         public DbSet<Personalization> Personalization => Set<Personalization>();
         public DbSet<Post> Posts => Set<Post>();
+        public DbSet<ImageData> Images => Set<ImageData>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -29,6 +30,10 @@ namespace SportMap.DAL.DataContext
                 entity.HasOne(user => user.Personalization)
                       .WithOne(personalization => personalization.User)
                       .HasForeignKey<Personalization>(personalization => personalization.UserId);
+                entity.HasOne<ImageData>()
+                      .WithMany()
+                      .HasForeignKey(user => user.ProfilePictureId)
+                      .OnDelete(DeleteBehavior.SetNull);
             });
 
             modelBuilder.Entity<Personalization>(entity =>
@@ -41,6 +46,19 @@ namespace SportMap.DAL.DataContext
             modelBuilder.Entity<Post>(entity =>
             {
                 entity.ConfigureBaseModelFields();
+            });
+
+            modelBuilder.Entity<ImageData>(entity =>
+            {
+                entity.ConfigureBaseModelFields();
+                entity.HasOne<User>()
+                      .WithMany()
+                      .HasForeignKey(img => img.UploaderId)
+                      .OnDelete(DeleteBehavior.Restrict);
+                entity.HasOne<User>()
+                      .WithMany()
+                      .HasForeignKey(img => img.ReviewerId)
+                      .OnDelete(DeleteBehavior.SetNull);
             });
         }
     }

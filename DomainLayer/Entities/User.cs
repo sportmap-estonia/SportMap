@@ -13,6 +13,7 @@ namespace DomainLayer.Entities
         public DateOnly? Birthdate { get; set; }
         public Guid? UserRoleId { get; set; }
         public Guid? PersonalizationId { get; set; }
+        public Guid? ProfilePictureId { get; set; }
         public UserRole? UserRole { get; set; }
         public Personalization? Personalization { get; set; } 
     }
