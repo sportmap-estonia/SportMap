@@ -1,0 +1,11 @@
+$kind: http-request
+name: Get Post by ID
+method: GET
+url: '{{baseUrl}}/api/feed/{{postId}}'
+order: 2000
+auth:
+  type: bearer
+  credentials:
+    - key: token
+      value: '{{accessToken}}'
+description: Returns a single verified post by its GUID.
