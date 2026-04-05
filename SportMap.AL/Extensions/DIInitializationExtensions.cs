@@ -33,6 +33,7 @@ namespace SportMap.Al.Extensions
             serviceCollection.AddTransient<GetCurrentUserInfoQueryHandler>();
             // Places
             serviceCollection.AddTransient<GetPlaceQueryHandler>();
+            serviceCollection.AddTransient<SearchPlacesQueryHandler>();
             serviceCollection.AddTransient<CreatePlaceCommandHandler>();
         }
     }

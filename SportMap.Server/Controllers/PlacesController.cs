@@ -12,6 +12,7 @@ namespace SportMap.PL.Controllers
     [ApiController]
     public class PlacesController(
         GetPlaceQueryHandler getPlaces,
+        SearchPlacesQueryHandler searchPlaces,
         CreatePlaceCommandHandler createPlaces,
         ILogger<PlacesController> logger) : BaseController<PlaceDto>(logger)
     {
@@ -81,6 +82,30 @@ namespace SportMap.PL.Controllers
             }
 
             return TypedResults.Ok(places[0]);
+        }
+
+        // GET: api/places/search?q=term
+        [HttpGet("search")]
+        [ProducesResponseType(typeof(List<PlaceDto>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<List<PlaceDto>>> Search([FromQuery] string q)
+        {
+            try
+            {
+                var query = new SearchPlacesQuery(q ?? string.Empty);
+                var result = await searchPlaces.Handle(query, CancellationToken.None);
+                
+                if (result.HasError || result.Data == null)
+                {
+                    return Ok(new List<PlaceDto>());
+                }
+
+                return Ok(result.Data.ToList());
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "{className}.{methodName}: Unhandled exception occured: {message}", nameof(PlacesController), nameof(Search), e.Message);
+                return Ok(new List<PlaceDto>());
+            }
         }
 
         // POST: api/places

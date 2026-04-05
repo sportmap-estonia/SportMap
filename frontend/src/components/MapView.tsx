@@ -5,6 +5,7 @@ import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import PlaceDetailSheet, { Place } from './PlaceDetailSheet';
 import { RecenterButton } from './navigation/RecenterButton';
+import SearchBar from './SearchBar';
 import { placeService, type PlaceDto } from '@/services/place.service';
 import type { PlaceTypeDto } from '@/types/place';
 
@@ -80,6 +81,24 @@ export default function MapView() {
     }
   };
 
+  const handleSearchPlaceSelect = (placeDto: PlaceDto) => {
+    const place = mapToPlace(placeDto);
+    setSelectedPlace(place);
+    
+    // Clear filter and show only searched place
+    setSelectedPlaceTypeId(null);
+    setPlaces([place]);
+    
+    const map = mapInstanceRef.current;
+    if (map) {
+      map.flyTo({
+        center: [place.location.lng, place.location.lat],
+        zoom: 16,
+        essential: true
+      });
+    }
+  };
+
   // Fetch places from API
   useEffect(() => {
     async function fetchPlaces() {
@@ -87,9 +106,14 @@ export default function MapView() {
         const result = await placeService.getAll(selectedPlaceTypeId ? { placeTypeId: selectedPlaceTypeId } : undefined);
         if (result.isSucceed && result.value) {
           setPlaces(result.value.map(mapToPlace));
+        } else {
+          // Clear markers on error
+          setPlaces([]);
         }
       } catch (error) {
         console.error('Failed to fetch places:', error);
+        // Clear markers on error
+        setPlaces([]);
       } finally {
         setLoading(false);
       }
@@ -261,6 +285,7 @@ export default function MapView() {
       
       {/* Place Type Filter */}
       <div className="absolute top-4 left-4 z-30 flex flex-wrap gap-2">
+        <SearchBar onPlaceSelect={handleSearchPlaceSelect} />
         <button
           onClick={() => setSelectedPlaceTypeId(null)}
           className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
