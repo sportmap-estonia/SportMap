@@ -5,7 +5,7 @@ import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import PlaceDetailSheet, { Place } from './PlaceDetailSheet';
 import { RecenterButton } from './navigation/RecenterButton';
-import { placeService, PlaceDto } from '@/services/place.service';
+import { placeService, type PlaceDto } from '@/services/place.service';
 
 const TALLINN_CENTER: [number, number] = [24.7421, 59.4379];
 
@@ -147,36 +147,6 @@ export default function MapView() {
         
         // Store map instance
         mapInstanceRef.current = map;
-
-        // Add markers for places from API
-        map.on('load', () => {
-          if (places.length === 0) return;
-          
-          places.forEach((place) => {
-            // Create a custom marker element
-            const el = document.createElement('div');
-            el.className = 'custom-marker';
-            el.style.width = '30px';
-            el.style.height = '30px';
-            el.style.backgroundColor = place.placeType?.name === 'Park' ? '#22c55e' : 
-                                      place.placeType?.name === 'Gym' ? '#3b82f6' : 
-                                      place.placeType?.name === 'Stadium' ? '#f97316' : '#a855f7';
-            el.style.borderRadius = '50%';
-            el.style.border = '2px solid #fff';
-            el.style.cursor = 'pointer';
-            el.style.boxShadow = '0 0 10px rgba(0,0,0,0.5)';
-
-            // Add click handler
-            el.addEventListener('click', () => {
-              setSelectedPlace(place);
-            });
-
-            // Add marker to map
-            new mapboxgl.Marker(el)
-              .setLngLat([place.location.lng, place.location.lat])
-              .addTo(map!);
-          });
-        });
       } catch (error) {
         console.error('Error initializing Mapbox map:', error);
       }
@@ -191,6 +161,58 @@ export default function MapView() {
       }
     };
   }, []);
+
+  // Add markers when places change
+  useEffect(() => {
+    const addMarkers = () => {
+      const map = mapInstanceRef.current;
+      if (!map) return;
+      if (places.length === 0) return;
+
+      places.forEach((place) => {
+        // Create a custom marker element
+        const el = document.createElement('div');
+        el.className = 'custom-marker';
+        el.style.width = '30px';
+        el.style.height = '30px';
+        el.style.backgroundColor = place.placeType?.name === 'Park' ? '#22c55e' : 
+                                  place.placeType?.name === 'Gym' ? '#3b82f6' : 
+                                  place.placeType?.name === 'Stadium' ? '#f97316' : '#a855f7';
+        el.style.borderRadius = '50%';
+        el.style.border = '2px solid #fff';
+        el.style.cursor = 'pointer';
+        el.style.boxShadow = '0 0 10px rgba(0,0,0,0.5)';
+
+        // Add click handler
+        el.addEventListener('click', () => {
+          setSelectedPlace(place);
+        });
+
+        // Add marker to map
+        new mapboxgl.Marker(el)
+          .setLngLat([place.location.lng, place.location.lat])
+          .addTo(map);
+      });
+    };
+
+    // Try to add markers immediately, or retry after short delay
+    const tryAddMarkers = () => {
+      const map = mapInstanceRef.current;
+      if (!map) {
+        setTimeout(tryAddMarkers, 100);
+        return;
+      }
+      
+      if (!map.isStyleLoaded()) {
+        map.once('load', addMarkers);
+        return;
+      }
+      
+      addMarkers();
+    };
+
+    tryAddMarkers();
+  }, [places]);
 
   return (
     <div className="w-full h-full relative">
