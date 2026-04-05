@@ -5,9 +5,12 @@ import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import PlaceDetailSheet, { Place } from './PlaceDetailSheet';
 import { RecenterButton } from './navigation/RecenterButton';
-import SearchBar from './SearchBar';
 import { placeService, type PlaceDto } from '@/services/place.service';
-import type { PlaceTypeDto } from '@/types/place';
+
+interface MapViewProps {
+  selectedPlace?: PlaceDto | null;
+  onPlaceSelect?: (place: PlaceDto | null) => void;
+}
 
 const TALLINN_CENTER: [number, number] = [24.7421, 59.4379];
 
@@ -33,20 +36,35 @@ function mapToPlace(dto: PlaceDto): Place {
   };
 }
 
-export default function MapView() {
+export default function MapView({ selectedPlace: selectedPlaceProp, onPlaceSelect }: MapViewProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<mapboxgl.Map | null>(null);
   const markersRef = useRef<mapboxgl.Marker[]>([]);
   const userLocationMarkerRef = useRef<mapboxgl.Marker | null>(null);
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   const [places, setPlaces] = useState<Place[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [placeTypes, setPlaceTypes] = useState<PlaceTypeDto[]>([]);
-  const [selectedPlaceTypeId, setSelectedPlaceTypeId] = useState<string | null>(null);
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
+
+  // Sync selectedPlace from parent
+  useEffect(() => {
+    if (selectedPlaceProp) {
+      setSelectedPlace(mapToPlace(selectedPlaceProp));
+    }
+  }, [selectedPlaceProp]);
 
   const handleReport = () => {
     alert('Report functionality would be implemented here');
+  };
+
+  const handlePlaceClick = (place: Place) => {
+    setSelectedPlace(place);
+  };
+
+  const handlePlaceClose = () => {
+    setSelectedPlace(null);
+    if (onPlaceSelect) {
+      onPlaceSelect(null);
+    }
   };
 
   const handleRecenter = () => {
@@ -95,10 +113,6 @@ export default function MapView() {
     const place = mapToPlace(placeDto);
     setSelectedPlace(place);
     
-    // Clear filter and show only searched place
-    setSelectedPlaceTypeId(null);
-    setPlaces([place]);
-    
     const map = mapInstanceRef.current;
     if (map) {
       map.flyTo({
@@ -109,43 +123,7 @@ export default function MapView() {
     }
   };
 
-  // Fetch places from API
-  useEffect(() => {
-    async function fetchPlaces() {
-      try {
-        const result = await placeService.getAll(selectedPlaceTypeId ? { placeTypeId: selectedPlaceTypeId } : undefined);
-        if (result.isSucceed && result.value) {
-          setPlaces(result.value.map(mapToPlace));
-        } else {
-          // Clear markers on error
-          setPlaces([]);
-        }
-      } catch (error) {
-        console.error('Failed to fetch places:', error);
-        // Clear markers on error
-        setPlaces([]);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchPlaces();
-  }, [selectedPlaceTypeId]);
-
-  // Fetch place types
-  useEffect(() => {
-    async function fetchPlaceTypes() {
-      try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/place-types`);
-        if (response.ok) {
-          const data = await response.json();
-          setPlaceTypes(data);
-        }
-      } catch (error) {
-        console.error('Failed to fetch place types:', error);
-      }
-    }
-    fetchPlaceTypes();
-  }, []);
+  // Fetch user location on mount
 
   // Get user location on mount
   useEffect(() => {
@@ -344,41 +322,13 @@ export default function MapView() {
         }
       `}</style>
       
-      {/* Place Type Filter */}
-      <div className="absolute top-4 left-4 z-30 flex flex-wrap gap-2">
-        <SearchBar onPlaceSelect={handleSearchPlaceSelect} />
-        <button
-          onClick={() => setSelectedPlaceTypeId(null)}
-          className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
-            selectedPlaceTypeId === null
-              ? 'bg-white text-gray-900'
-              : 'bg-gray-800/80 text-white hover:bg-gray-700'
-          }`}
-        >
-          All
-        </button>
-        {placeTypes.map((type) => (
-          <button
-            key={type.id}
-            onClick={() => setSelectedPlaceTypeId(type.id)}
-            className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
-              selectedPlaceTypeId === type.id
-                ? 'bg-white text-gray-900'
-                : 'bg-gray-800/80 text-white hover:bg-gray-700'
-            }`}
-          >
-            {type.name}
-          </button>
-        ))}
-      </div>
-
       <div ref={mapRef} className="w-full h-full" />
       <div className="absolute top-4 right-4 z-30">
         <RecenterButton onClick={handleRecenter} />
       </div>
       <PlaceDetailSheet
         place={selectedPlace}
-        onClose={() => setSelectedPlace(null)}
+        onClose={handlePlaceClose}
         onReport={handleReport} />
     </div>
   );
