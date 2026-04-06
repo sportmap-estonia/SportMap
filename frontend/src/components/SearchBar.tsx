@@ -12,6 +12,7 @@ export default function SearchBar({ onPlaceSelect }: SearchBarProps) {
   const [results, setResults] = useState<PlaceDto[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const justSelected = useRef(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   // Debounced search
@@ -20,6 +21,7 @@ export default function SearchBar({ onPlaceSelect }: SearchBarProps) {
       if (query.length < 2) {
         setResults([]);
         setIsOpen(false);
+        justSelected.current = false;
         return;
       }
 
@@ -27,8 +29,9 @@ export default function SearchBar({ onPlaceSelect }: SearchBarProps) {
       const result = await placeService.search(query);
       if (result.isSucceed && result.value) {
         setResults(result.value);
-        setIsOpen(result.value.length > 0);
+        setIsOpen(result.value.length > 0 && !justSelected.current);
       }
+      justSelected.current = false;
       setIsLoading(false);
     }, 300);
 
@@ -49,6 +52,7 @@ export default function SearchBar({ onPlaceSelect }: SearchBarProps) {
   const handleSelect = (place: PlaceDto) => {
     setQuery(place.name);
     setIsOpen(false);
+    justSelected.current = true;
     onPlaceSelect(place);
   };
 
