@@ -27,21 +27,7 @@ namespace SportMap.AL.UseCases.Places
 
                 var resultData = await unitOfWork.PlaceRepository.AddAsync(place, cancellationToken);
 
-                return Result<PlaceDto>.WithData(new PlaceDto(
-                    resultData.Id,
-                    resultData.Name,
-                    resultData.Description,
-                    resultData.PlaceTypeId,
-                    resultData.Latitude,
-                    resultData.Longitude,
-                    resultData.Address,
-                    resultData.ImageId,
-                    resultData.CreatorId,
-                    string.Empty,
-                    resultData.CreatedAt,
-                    resultData.ModifiedAt,
-                    resultData.Status
-                ));
+                return Result<PlaceDto>.WithData(resultData.Map());
             }
             catch (OperationCanceledException oce)
             {

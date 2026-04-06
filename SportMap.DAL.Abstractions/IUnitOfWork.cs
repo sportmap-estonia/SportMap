@@ -8,6 +8,7 @@ namespace SportMap.DAL.Abstractions
         IImageRepository ImageRepository { get; }
         IUserRepository UserRepository { get; }
         IPlaceRepository PlaceRepository { get; }
+        IPlaceTypeRepository PlaceTypeRepository { get; }
         public void Save();
     }
 }

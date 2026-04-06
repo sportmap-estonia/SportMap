@@ -5,9 +5,10 @@ import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import PlaceDetailSheet, { Place } from './PlaceDetailSheet';
 import { RecenterButton } from './navigation/RecenterButton';
-import { placeService, type PlaceDto } from '@/services/place.service';
+import type { PlaceDto } from '@/services/place.service';
 
 interface MapViewProps {
+  places: PlaceDto[];
   selectedPlace?: PlaceDto | null;
   onPlaceSelect?: (place: PlaceDto | null) => void;
 }
@@ -36,28 +37,57 @@ function mapToPlace(dto: PlaceDto): Place {
   };
 }
 
-export default function MapView({ selectedPlace: selectedPlaceProp, onPlaceSelect }: MapViewProps) {
+export default function MapView({ places, selectedPlace: selectedPlaceProp, onPlaceSelect }: MapViewProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<mapboxgl.Map | null>(null);
   const markersRef = useRef<mapboxgl.Marker[]>([]);
   const userLocationMarkerRef = useRef<mapboxgl.Marker | null>(null);
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
-  const [places, setPlaces] = useState<Place[]>([]);
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
 
-  // Sync selectedPlace from parent
+  // Sync selectedPlace from parent and fly to location
   useEffect(() => {
     if (selectedPlaceProp) {
-      setSelectedPlace(mapToPlace(selectedPlaceProp));
+      const place = mapToPlace(selectedPlaceProp);
+      setSelectedPlace(place);
+      
+      // Fly to the selected place
+      const map = mapInstanceRef.current;
+      if (map) {
+        map.flyTo({
+          center: [place.location.lng, place.location.lat],
+          zoom: 16,
+          essential: true
+        });
+      }
     }
   }, [selectedPlaceProp]);
 
-  const handleReport = () => {
-    alert('Report functionality would be implemented here');
-  };
-
+  // When user clicks marker, notify parent
   const handlePlaceClick = (place: Place) => {
     setSelectedPlace(place);
+    if (onPlaceSelect) {
+      // Convert back to DTO for parent
+      const dto: PlaceDto = {
+        id: place.id,
+        name: place.name,
+        placeTypeId: place.placeTypeId,
+        latitude: place.location.lat,
+        longitude: place.location.lng,
+        address: place.address || '',
+        description: place.description,
+        creatorId: place.creatorId,
+        createdAt: place.createdAt,
+        updatedAt: place.updatedAt || '',
+        status: place.status,
+        placeType: place.placeType ? {
+          id: place.placeType.id,
+          name: place.placeType.name,
+          description: place.placeType.description
+        } : undefined
+      };
+      onPlaceSelect(dto);
+    }
   };
 
   const handlePlaceClose = () => {
@@ -65,6 +95,10 @@ export default function MapView({ selectedPlace: selectedPlaceProp, onPlaceSelec
     if (onPlaceSelect) {
       onPlaceSelect(null);
     }
+  };
+
+  const handleReport = () => {
+    alert('Report functionality would be implemented here');
   };
 
   const handleRecenter = () => {
@@ -108,22 +142,6 @@ export default function MapView({ selectedPlace: selectedPlaceProp, onPlaceSelec
       });
     }
   };
-
-  const handleSearchPlaceSelect = (placeDto: PlaceDto) => {
-    const place = mapToPlace(placeDto);
-    setSelectedPlace(place);
-    
-    const map = mapInstanceRef.current;
-    if (map) {
-      map.flyTo({
-        center: [place.location.lng, place.location.lat],
-        zoom: 16,
-        essential: true
-      });
-    }
-  };
-
-  // Fetch user location on mount
 
   // Get user location on mount
   useEffect(() => {
@@ -255,9 +273,11 @@ export default function MapView({ selectedPlace: selectedPlaceProp, onPlaceSelec
       markersRef.current.forEach(marker => marker.remove());
       markersRef.current = [];
 
-      if (places.length === 0) return;
+      const mappedPlaces = places.map(mapToPlace);
 
-      places.forEach((place) => {
+      if (mappedPlaces.length === 0) return;
+
+      mappedPlaces.forEach((place) => {
         // Create a custom marker element
         const el = document.createElement('div');
         el.className = 'custom-marker';
@@ -273,7 +293,7 @@ export default function MapView({ selectedPlace: selectedPlaceProp, onPlaceSelec
 
         // Add click handler
         el.addEventListener('click', () => {
-          setSelectedPlace(place);
+          handlePlaceClick(place);
         });
 
         // Add marker to map

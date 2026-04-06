@@ -31,29 +31,7 @@ namespace SportMap.AL.UseCases.Places
                     .FilterIfNotNull(query.PlaceTypeId, (place, ptId) => place.PlaceTypeId == ptId);
 
                 places = filteredPlaces
-                    .Select(place => new PlaceDto(
-                        place.Id,
-                        place.Name,
-                        place.Description,
-                        place.PlaceTypeId,
-                        place.Latitude,
-                        place.Longitude,
-                        place.Address,
-                        place.ImageId,
-                        place.CreatorId,
-                        string.Empty, // TODO: Include CreatorName when creator relationship is fixed
-                        place.CreatedAt,
-                        place.ModifiedAt,
-                        place.Status
-                    )
-                    {
-                        PlaceType = place.PlaceType != null ? new PlaceTypeDto
-                        {
-                            Id = place.PlaceType.Id,
-                            Name = place.PlaceType.Name,
-                            Description = place.PlaceType.Description
-                        } : null
-                    })
+                    .Select(place => place.Map())
                     .ToList()
                     .AsReadOnly();
             }

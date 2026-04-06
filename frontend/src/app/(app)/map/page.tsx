@@ -60,6 +60,7 @@ export default function MapPage() {
 
   const handleSearchPlaceSelect = (place: PlaceDto) => {
     setSelectedPlace(place);
+    setSelectedPlaceTypeId(null); // Clear filter to show search result
     setView('map');
   };
 
@@ -121,6 +122,7 @@ export default function MapPage() {
       <div className="flex-1 relative">
         {view === 'map' ? (
           <MapView 
+            places={places}
             selectedPlace={selectedPlace} 
             onPlaceSelect={setSelectedPlace} 
           />

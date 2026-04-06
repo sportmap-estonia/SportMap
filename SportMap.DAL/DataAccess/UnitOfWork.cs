@@ -6,7 +6,7 @@ using SportMap.DAL.Repositories;
 
 namespace SportMap.DAL.DataAccess
 {
-    public class UnitOfWork(AppDbContext dbContext, IPostRepository postRepo, IImageRepository imageRepo, IPlaceRepository placeRepo, IUserRepository userRepo, ILogger<UnitOfWork> logger) : IUnitOfWork
+    public class UnitOfWork(AppDbContext dbContext, IPostRepository postRepo, IImageRepository imageRepo, IPlaceRepository placeRepo, IUserRepository userRepo, IPlaceTypeRepository placeTypeRepo, ILogger<UnitOfWork> logger) : IUnitOfWork
     {
         private bool disposed = false;
 
@@ -15,6 +15,7 @@ namespace SportMap.DAL.DataAccess
         public IImageRepository ImageRepository => imageRepo;
         public IUserRepository UserRepository => userRepo;
         public IPlaceRepository PlaceRepository => placeRepo;
+        public IPlaceTypeRepository PlaceTypeRepository => placeTypeRepo;
         #endregion
 
         public void Save()
