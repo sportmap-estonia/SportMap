@@ -1,12 +1,14 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using SportMap.AL.Abstractions.Services;
+using SportMap.AL.Common;
 using SportMap.AL.UseCases.Feeds;
 using SportMap.AL.UseCases.Images;
+using SportMap.AL.UseCases.Profile;
+using SportMap.AL.UseCases.Settings;
 using SportMap.AL.UseCases.Users;
 using SportMap.AL.UseCases.Places;
 using SportMap.AL.UseCases.PlaceTypes;
 using SportMap.DAL.Cache;
-using SportMap.AL.Common;
 
 namespace SportMap.Al.Extensions
 {
@@ -22,6 +24,7 @@ namespace SportMap.Al.Extensions
             // Posts
             serviceCollection.AddTransient<GetPostQueryHandler>();
             serviceCollection.AddTransient<CreatePostCommandHandler>();
+            serviceCollection.AddTransient<GetPostsByUserQueryHandler>();
 
             // Images
             serviceCollection.AddTransient<GetImageQueryHandler>();
@@ -32,14 +35,6 @@ namespace SportMap.Al.Extensions
 
             // Users
             serviceCollection.AddTransient<GetCurrentUserInfoQueryHandler>();
-            
-            // Places
-            serviceCollection.AddTransient<GetPlaceQueryHandler>();
-            serviceCollection.AddTransient<SearchPlacesQueryHandler>();
-            serviceCollection.AddTransient<CreatePlaceCommandHandler>();
-
-            // PlaceTypes
-            serviceCollection.AddTransient<GetPlaceTypesQueryHandler>();
         }
     }
 }
