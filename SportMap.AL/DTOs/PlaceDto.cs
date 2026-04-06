@@ -1,5 +1,6 @@
 using SportMap.AL.Abstractions;
 using DomainLayer.Entities;
+using DomainLayer.Entities.Enums;
 
 namespace SportMap.AL.DTOs
 {
@@ -7,7 +8,7 @@ namespace SportMap.AL.DTOs
     {
         public PlaceDto() { }
 
-        public PlaceDto(Guid id, string name, string description, Guid placeTypeId, double latitude, double longitude, string? address, Guid? imageId, Guid creatorId, string creatorName, DateTime createdAt, DateTime? updatedAt, PlaceStatus status)
+        public PlaceDto(Guid id, string name, string description, Guid placeTypeId, double latitude, double longitude, string? address, Guid? imageId, Guid creatorId, string creatorName, DateTime createdAt, DateTime? updatedAt, StatusType status)
         {
             Id = id;
             Name = name;

@@ -1,4 +1,5 @@
 using DomainLayer.Entities;
+using DomainLayer.Entities.Enums;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using SportMap.AL.DTOs;
@@ -24,7 +25,7 @@ namespace SportMap.PL.Controllers
 
             try
             {
-                var query = new GetPlaceQuery(null, PlaceStatus.Approved, placeTypeId);
+                var query = new GetPlaceQuery(null, StatusType.Verified, placeTypeId);
                 result = await getPlaces.Handle(query, CancellationToken.None);
             }
             catch (Exception e)
@@ -58,7 +59,7 @@ namespace SportMap.PL.Controllers
 
             try
             {
-                var query = new GetPlaceQuery(id, PlaceStatus.Approved, null);
+                var query = new GetPlaceQuery(id, StatusType.Verified, null);
                 result = await getPlaces.Handle(query, CancellationToken.None);
             }
             catch (Exception e)

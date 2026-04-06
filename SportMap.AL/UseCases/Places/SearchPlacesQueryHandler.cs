@@ -1,4 +1,5 @@
 using DomainLayer.Entities;
+using DomainLayer.Entities.Enums;
 using Microsoft.Extensions.Logging;
 using SportMap.AL.Abstractions.Services;
 using SportMap.AL.Abstractions.UseCases;
@@ -24,7 +25,7 @@ namespace SportMap.AL.UseCases.Places
                 var searchTerm = query.SearchTerm.ToLower();
 
                 var filteredPlaces = placeData
-                    .Where(place => place.Status == PlaceStatus.Approved)
+                    .Where(place => place.Status == StatusType.Verified)
                     .Where(place => 
                         place.Name.ToLower().Contains(searchTerm) ||
                         (place.Address != null && place.Address.ToLower().Contains(searchTerm)) ||

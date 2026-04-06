@@ -1,4 +1,5 @@
 using DomainLayer.Common;
+using DomainLayer.Entities.Enums;
 
 namespace DomainLayer.Entities
 {
@@ -12,19 +13,12 @@ namespace DomainLayer.Entities
         public string? Address { get; set; }
         public Guid? ImageId { get; set; }
         public Guid CreatorId { get; set; }
-        public PlaceStatus Status { get; set; } = PlaceStatus.Pending;
+        public StatusType Status { get; set; } = StatusType.Pending;
         public Guid? ReviewerId { get; set; }
 
         public PlaceType? PlaceType { get; set; }
         public Image? Image { get; set; }
         public User Creator { get; set; } = null!;
         public User? Reviewer { get; set; }
-    }
-
-    public enum PlaceStatus
-    {
-        Pending = 0,
-        Approved = 1,
-        Rejected = 2
     }
 }

@@ -1,4 +1,5 @@
 using DomainLayer.Entities;
+using DomainLayer.Entities.Enums;
 using Microsoft.Extensions.Logging;
 using SportMap.AL.Abstractions.UseCases;
 using SportMap.AL.DTOs;
@@ -22,7 +23,7 @@ namespace SportMap.AL.UseCases.Places
                     Longitude = command.Longitude,
                     Address = command.Address,
                     CreatorId = command.CreatorId,
-                    Status = PlaceStatus.Approved
+                    Status = StatusType.Verified
                 };
 
                 var resultData = await unitOfWork.PlaceRepository.AddAsync(place, cancellationToken);

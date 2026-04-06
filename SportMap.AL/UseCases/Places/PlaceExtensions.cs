@@ -1,4 +1,5 @@
 using DomainLayer.Entities;
+using DomainLayer.Entities.Enums;
 using SportMap.AL.DTOs;
 
 namespace SportMap.AL.UseCases.Places
@@ -44,7 +45,7 @@ namespace SportMap.AL.UseCases.Places
                     Address = dto.Address,
                     ImageId = dto.ImageId,
                     CreatorId = dto.CreatorId,
-                    Status = Enum.Parse<PlaceStatus>(dto.Status)
+                    Status = Enum.Parse<StatusType>(dto.Status)
                 };
             }
         }
