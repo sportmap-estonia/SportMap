@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import dynamic from 'next/dynamic';
 import PlaceList from '@/components/PlaceList';
 import { placeService, type PlaceDto } from '@/services/place.service';
@@ -20,7 +20,7 @@ export default function MapPage() {
   const [selectedPlaceTypeId, setSelectedPlaceTypeId] = useState<string | null>(null);
   const [selectedPlace, setSelectedPlace] = useState<PlaceDto | null>(null);
   const [loading, setLoading] = useState(true);
-
+  const [isRefreshing, setIsRefreshing] = useState(false);
   // Fetch place types
   useEffect(() => {
     async function fetchPlaceTypes() {
@@ -31,27 +31,30 @@ export default function MapPage() {
     }
     fetchPlaceTypes();
   }, []);
-
+  
   // Fetch places
-  useEffect(() => {
-    async function fetchPlaces() {
-      setLoading(true);
-      try {
-        const result = await placeService.getAll(selectedPlaceTypeId ? { placeTypeId: selectedPlaceTypeId } : undefined);
-        if (result.isSucceed && result.value) {
-          setPlaces(result.value);
-        } else {
-          setPlaces([]);
-        }
-      } catch (error) {
-        console.error('Failed to fetch places:', error);
+  const fetchPlaces = useCallback(async () => {
+    if (!isRefreshing) setLoading(true);
+    try {
+      const result = await placeService.getAll(selectedPlaceTypeId ? { placeTypeId: selectedPlaceTypeId } : undefined);
+      if (result.isSucceed && result.value) {
+        setPlaces(result.value);
+      } else {
         setPlaces([]);
-      } finally {
-        setLoading(false);
       }
+    } catch (error) {
+      console.error('Failed to fetch places:', error);
+      setPlaces([]);
+    } finally {
+      setLoading(false);
+      setIsRefreshing(false);
     }
+  }, [selectedPlaceTypeId, isRefreshing]);
+
+  // Fetch places on mount and when filter changes
+  useEffect(() => {
     fetchPlaces();
-  }, [selectedPlaceTypeId]);
+  }, [fetchPlaces]);
 
   const handleSearchPlaceSelect = (place: PlaceDto) => {
     setSelectedPlace(place);
@@ -62,6 +65,11 @@ export default function MapPage() {
   const handlePlaceClick = (place: PlaceDto) => {
     setSelectedPlace(place);
     setView('map');
+  };
+
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    fetchPlaces();
   };
 
   return (
@@ -125,7 +133,9 @@ export default function MapPage() {
         {view === 'list' && (
           <PlaceList 
             places={places} 
-            onPlaceClick={handlePlaceClick} 
+            onPlaceClick={handlePlaceClick}
+            onRefresh={handleRefresh}
+            isRefreshing={isRefreshing}
           />
         )}
       </div>

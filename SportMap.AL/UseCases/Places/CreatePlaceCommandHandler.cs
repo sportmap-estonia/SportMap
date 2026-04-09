@@ -11,21 +11,25 @@ namespace SportMap.AL.UseCases.Places
     {
         public async Task<Result<PlaceDto>> Handle(CreatePlaceCommand command, CancellationToken cancellationToken)
         {
+            var placeDto = new PlaceDto(
+                Guid.NewGuid(),
+                command.Name,
+                command.Description,
+                command.PlaceTypeId,
+                command.Latitude,
+                command.Longitude,
+                command.Address,
+                null,
+                command.CreatorId,
+                string.Empty,
+                DateTime.UtcNow,
+                null,
+                StatusType.Verified
+            );
+
             try
             {
-                var place = new Place
-                {
-                    Id = Guid.NewGuid(),
-                    Name = command.Name,
-                    Description = command.Description,
-                    PlaceTypeId = command.PlaceTypeId,
-                    Latitude = command.Latitude,
-                    Longitude = command.Longitude,
-                    Address = command.Address,
-                    CreatorId = command.CreatorId,
-                    Status = StatusType.Verified
-                };
-
+                var place = placeDto.Map();
                 var resultData = await unitOfWork.PlaceRepository.AddAsync(place, cancellationToken);
 
                 return Result<PlaceDto>.WithData(resultData.Map());
