@@ -7,7 +7,7 @@ export interface PlaceFilters {
 }
 
 export class PlaceService extends BaseService<PlaceDto> {
-  protected readonly endpoint = 'api/places';
+  protected readonly endpoint = 'places';
 
   constructor() {
     const baseUrl = process.env.NEXT_PUBLIC_API_URL;

@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect, use } from 'react';
+import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import PlaceList from '@/components/PlaceList';
 import { placeService, type PlaceDto } from '@/services/place.service';
-import type { PlaceTypeDto } from '@/types/place';
+import { placeTypeService, type PlaceTypeDto } from '@/services/place-type.service';
 import SearchBar from '@/components/SearchBar';
 
 // Dynamic import for MapView to avoid SSR issues
@@ -24,14 +24,9 @@ export default function MapPage() {
   // Fetch place types
   useEffect(() => {
     async function fetchPlaceTypes() {
-      try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/place-types`);
-        if (response.ok) {
-          const data = await response.json();
-          setPlaceTypes(data);
-        }
-      } catch (error) {
-        console.error('Failed to fetch place types:', error);
+      const result = await placeTypeService.getAll();
+      if (result.isSucceed && result.value) {
+        setPlaceTypes(result.value);
       }
     }
     fetchPlaceTypes();
@@ -120,13 +115,14 @@ export default function MapPage() {
 
       {/* Main Content */}
       <div className="flex-1 relative">
-        {view === 'map' ? (
+        <div className={view === 'map' ? 'w-full h-full' : 'hidden'}>
           <MapView 
             places={places}
             selectedPlace={selectedPlace} 
             onPlaceSelect={setSelectedPlace} 
           />
-        ) : (
+        </div>
+        {view === 'list' && (
           <PlaceList 
             places={places} 
             onPlaceClick={handlePlaceClick} 

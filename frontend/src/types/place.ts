@@ -18,5 +18,6 @@ export interface PlaceDto {
 export interface PlaceTypeDto {
   id: string;
   name: string;
-  description: string;
+  description: string;  
+  createdAt: string;
 }
