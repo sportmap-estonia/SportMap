@@ -1,4 +1,4 @@
-﻿using SportMap.DAL.Abstractions.Repositories;
+using SportMap.DAL.Abstractions.Repositories;
 
 namespace SportMap.DAL.Abstractions
 {
@@ -7,6 +7,8 @@ namespace SportMap.DAL.Abstractions
         IPostRepository PostRepository { get; }
         IImageRepository ImageRepository { get; }
         IUserRepository UserRepository { get; }
-        public void Save();
+        IPersonalizationRepository PersonalizationRepository { get; }
+        IPrivacyTypeRepository PrivacyTypeRepository { get; }
+        void Save();
     }
 }

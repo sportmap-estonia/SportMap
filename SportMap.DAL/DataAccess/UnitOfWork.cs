@@ -1,12 +1,18 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 using SportMap.DAL.Abstractions;
 using SportMap.DAL.Abstractions.Repositories;
 using SportMap.DAL.DataContext;
-using SportMap.DAL.Repositories;
 
 namespace SportMap.DAL.DataAccess
 {
-    public class UnitOfWork(AppDbContext dbContext, IPostRepository postRepo, IImageRepository imageRepo, IUserRepository userRepo, ILogger<UnitOfWork> logger) : IUnitOfWork
+    public class UnitOfWork(
+        AppDbContext dbContext,
+        IPostRepository postRepo,
+        IImageRepository imageRepo,
+        IUserRepository userRepo,
+        IPersonalizationRepository personalizationRepo,
+        IPrivacyTypeRepository privacyTypeRepo,
+        ILogger<UnitOfWork> logger) : IUnitOfWork
     {
         private bool disposed = false;
 
@@ -14,6 +20,8 @@ namespace SportMap.DAL.DataAccess
         public IPostRepository PostRepository => postRepo;
         public IImageRepository ImageRepository => imageRepo;
         public IUserRepository UserRepository => userRepo;
+        public IPersonalizationRepository PersonalizationRepository => personalizationRepo;
+        public IPrivacyTypeRepository PrivacyTypeRepository => privacyTypeRepo;
         #endregion
 
         public void Save()
