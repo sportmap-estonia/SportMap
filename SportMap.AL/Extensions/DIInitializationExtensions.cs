@@ -3,6 +3,8 @@ using SportMap.AL.Abstractions.Services;
 using SportMap.AL.UseCases.Feeds;
 using SportMap.AL.UseCases.Images;
 using SportMap.AL.UseCases.Users;
+using SportMap.AL.UseCases.Places;
+using SportMap.AL.UseCases.PlaceTypes;
 using SportMap.DAL.Cache;
 using SportMap.AL.Common;
 
@@ -30,6 +32,14 @@ namespace SportMap.Al.Extensions
 
             // Users
             serviceCollection.AddTransient<GetCurrentUserInfoQueryHandler>();
+            
+            // Places
+            serviceCollection.AddTransient<GetPlaceQueryHandler>();
+            serviceCollection.AddTransient<SearchPlacesQueryHandler>();
+            serviceCollection.AddTransient<CreatePlaceCommandHandler>();
+
+            // PlaceTypes
+            serviceCollection.AddTransient<GetPlaceTypesQueryHandler>();
         }
     }
 }
