@@ -80,10 +80,12 @@ export default function MapView({ places, selectedPlace: selectedPlaceProp, onPl
         createdAt: place.createdAt,
         updatedAt: place.updatedAt || '',
         status: place.status,
+        creatorName: '',
         placeType: place.placeType ? {
           id: place.placeType.id,
           name: place.placeType.name,
-          description: place.placeType.description
+          description: place.placeType.description,
+          createdAt: ''
         } : undefined
       };
       onPlaceSelect(dto);
