@@ -93,8 +93,8 @@ export default function MapView({ places, selectedPlace: selectedPlaceProp, onPl
   };
 
   const handlePlaceClose = () => {
-    const map = mapInstanceRef.current;    
-    map.zoomOut();    
+    const map = mapInstanceRef.current;
+    map?.zoomOut();    
     setSelectedPlace(null);
     if (onPlaceSelect) {
       onPlaceSelect(null);
