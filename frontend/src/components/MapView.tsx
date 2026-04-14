@@ -75,7 +75,7 @@ export default function MapView({ places, selectedPlace: selectedPlaceProp, onPl
         latitude: place.location.lat,
         longitude: place.location.lng,
         address: place.address || '',
-        description: place.description,
+        description: place.description || '',
         creatorId: place.creatorId,
         createdAt: place.createdAt,
         updatedAt: place.updatedAt || '',
