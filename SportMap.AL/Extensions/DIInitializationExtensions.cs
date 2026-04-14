@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using SportMap.AL.Abstractions.Services;
 using SportMap.AL.Common;
 using SportMap.AL.UseCases.Feeds;
@@ -35,6 +35,15 @@ namespace SportMap.Al.Extensions
 
             // Users
             serviceCollection.AddTransient<GetCurrentUserInfoQueryHandler>();
+
+            // Profile
+            serviceCollection.AddTransient<GetProfileByIdQueryHandler>();
+            serviceCollection.AddTransient<GetProfileByUsernameQueryHandler>();
+            serviceCollection.AddTransient<UpdateProfileCommandHandler>();
+
+            // Settings
+            serviceCollection.AddTransient<GetSettingsQueryHandler>();
+            serviceCollection.AddTransient<UpdateSettingsCommandHandler>();
         }
     }
 }
