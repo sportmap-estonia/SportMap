@@ -16,6 +16,8 @@ namespace SportMap.DAL.DataContext
         public DbSet<ImageData> Images => Set<ImageData>();
         public DbSet<Place> Places => Set<Place>();
         public DbSet<PlaceType> PlaceTypes => Set<PlaceType>();
+        public DbSet<Event> Events => Set<Event>();
+        public DbSet<EventParticipant> EventParticipants => Set<EventParticipant>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -76,6 +78,33 @@ namespace SportMap.DAL.DataContext
             modelBuilder.Entity<Image>(entity =>
             {
                 entity.ConfigureBaseModelFields();
+            });
+
+            modelBuilder.Entity<Event>(entity =>
+            {
+                entity.ConfigureBaseModelFields();
+                entity.HasOne(e => e.Place)
+                      .WithMany()
+                      .HasForeignKey(e => e.PlaceId)
+                      .OnDelete(DeleteBehavior.Restrict);
+                entity.HasOne(e => e.HostUser)
+                      .WithMany()
+                      .HasForeignKey(e => e.HostUserId)
+                      .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            modelBuilder.Entity<EventParticipant>(entity =>
+            {
+                entity.ConfigureBaseModelFields();
+                entity.HasOne(ep => ep.Event)
+                      .WithMany(e => e.Participants)
+                      .HasForeignKey(ep => ep.EventId)
+                      .OnDelete(DeleteBehavior.Cascade);
+                entity.HasOne(ep => ep.User)
+                      .WithMany()
+                      .HasForeignKey(ep => ep.UserId)
+                      .OnDelete(DeleteBehavior.Restrict);
+                entity.HasIndex(ep => new { ep.EventId, ep.UserId }).IsUnique();
             });
         }
     }

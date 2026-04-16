@@ -42,6 +42,30 @@ export class PlaceService extends BaseService<PlaceDto> {
       );
     }
   }
+
+  async createPlace(data: {
+    name: string;
+    description: string;
+    placeTypeId: string;
+    latitude: number;
+    longitude: number;
+    address?: string;
+    creatorId: string;
+  }): Promise<ResultOf<PlaceDto>> {
+    try {
+      const response = await fetch('/api/places', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+      return ResultOf.withValue((await response.json()) as PlaceDto);
+    } catch (error) {
+      return ResultOf.withError<PlaceDto>(
+        error instanceof Error ? error : new Error(String(error))
+      );
+    }
+  }
 }
 
 import { ResultOf } from '@/lib/result';

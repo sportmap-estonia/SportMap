@@ -21,3 +21,21 @@ export interface PlaceTypeDto {
   description: string;  
   createdAt: string;
 }
+
+/** A place that hasn't been created in the DB yet — deferred until event creation. */
+export interface PendingPlace {
+  pending: true;
+  name: string;
+  description: string;
+  placeTypeId: string;
+  latitude: number;
+  longitude: number;
+  creatorId: string;
+}
+
+/** Either an existing place from the DB or a new place pending creation. */
+export type SelectedPlace = PlaceDto | PendingPlace;
+
+export function isPendingPlace(place: SelectedPlace): place is PendingPlace {
+  return "pending" in place && place.pending === true;
+}
