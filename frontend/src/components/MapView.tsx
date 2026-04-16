@@ -24,7 +24,7 @@ function mapToPlace(dto: PlaceDto): Place {
     placeType: dto.placeType ? {
       id: dto.placeType.id,
       name: dto.placeType.name,
-      description: dto.placeType.description
+      description: dto.placeType.description,
     } : undefined,
     location: { lat: dto.latitude, lng: dto.longitude },
     address: dto.address,
@@ -75,8 +75,9 @@ export default function MapView({ places, selectedPlace: selectedPlaceProp, onPl
         latitude: place.location.lat,
         longitude: place.location.lng,
         address: place.address || '',
-        description: place.description,
+        description: place.description || '',
         creatorId: place.creatorId,
+        creatorName: '',
         createdAt: place.createdAt,
         updatedAt: place.updatedAt || '',
         status: place.status,
